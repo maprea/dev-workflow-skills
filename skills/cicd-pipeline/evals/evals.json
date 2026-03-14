@@ -1,0 +1,34 @@
+{
+  "skill_name": "cicd-pipeline",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Set up a GitHub Actions CI/CD pipeline for our TypeScript Express API. We use PostgreSQL, run tests with Jest, build a Docker image, and deploy to AWS ECS. We want PR checks and auto-deploy to staging on merge to main, with manual approval for production.",
+      "expected_output": "Should produce a complete GitHub Actions workflow with lint, test (with Postgres service), build Docker image, deploy to staging, and gated production deploy.",
+      "assertions": [
+        "Lint and test run in parallel",
+        "PostgreSQL service container configured with health check",
+        "Dependencies are cached",
+        "Docker build uses multi-stage and caching",
+        "Staging deploys automatically on main push",
+        "Production deploy requires manual approval (environment protection)",
+        "Smoke test after each deployment",
+        "All jobs have timeouts",
+        "Action versions are pinned"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our CI pipeline takes 35 minutes. It runs lint, unit tests, integration tests, e2e tests, security scan, build, and deploy all sequentially. How can we speed it up?",
+      "expected_output": "Should identify parallelization opportunities, caching improvements, and suggest restructuring. Should not suggest skipping tests.",
+      "assertions": [
+        "Identifies that lint, unit tests, and security scan can run in parallel",
+        "Recommends dependency caching",
+        "Suggests splitting integration and e2e tests from unit tests",
+        "Does NOT suggest removing or skipping tests",
+        "Recommends concurrency control to cancel outdated runs",
+        "Provides a restructured pipeline diagram"
+      ]
+    }
+  ]
+}

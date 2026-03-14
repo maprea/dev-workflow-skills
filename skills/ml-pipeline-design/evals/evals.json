@@ -1,0 +1,34 @@
+{
+  "skill_name": "ml-pipeline-design",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I have a Jupyter notebook that trains a customer churn prediction model. It loads data from a PostgreSQL database, does feature engineering (one-hot encoding, aggregations), trains an XGBoost model, and evaluates it. I want to turn this into a proper automated pipeline that retrains weekly. We use Python and have access to AWS.",
+      "expected_output": "Should design a pipeline DAG with separate stages, add data validation, recommend an appropriate orchestrator, ensure feature engineering is shared with serving, and set up scheduling.",
+      "assertions": [
+        "Breaks the notebook into discrete pipeline stages (ingest, validate, features, train, evaluate)",
+        "Adds data validation between ingestion and feature engineering",
+        "Recommends appropriate orchestrator for the team size (not Kubeflow for one model)",
+        "Ensures feature engineering code is reusable for serving",
+        "Parameterizes hyperparameters and data source config",
+        "Includes model evaluation gate (only register if better than current)",
+        "Sets up weekly scheduling",
+        "Includes experiment tracking integration"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our training pipeline keeps producing bad models. Sometimes the accuracy drops from 92% to 60% overnight. We suspect it's a data issue but we're not sure. How do we prevent this?",
+      "expected_output": "Should diagnose as missing data validation and recommend adding validation gates at ingestion. Should design specific checks for the kinds of data issues that cause 30% accuracy drops.",
+      "assertions": [
+        "Identifies missing data validation as the root cause",
+        "Recommends schema validation (column existence, types)",
+        "Recommends statistical validation (distribution checks, null rates)",
+        "Recommends volume checks (row count within expected range)",
+        "Suggests comparing incoming data against a training baseline",
+        "Recommends the pipeline should FAIL on bad data, not train on it",
+        "Provides concrete implementation (Great Expectations or Pandera)"
+      ]
+    }
+  ]
+}

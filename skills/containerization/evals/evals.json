@@ -1,0 +1,36 @@
+{
+  "skill_name": "containerization",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Containerize my Express.js API. It uses Node 20, has a build step (TypeScript), connects to PostgreSQL and Redis, and needs to run in production on Kubernetes.",
+      "expected_output": "Should produce a multi-stage Dockerfile, .dockerignore, docker-compose for local dev, and basic K8s deployment manifest. All following security and efficiency best practices.",
+      "assertions": [
+        "Uses multi-stage build (builder + production stages)",
+        "Pins Node version (not latest)",
+        "Copies package files before source code for cache efficiency",
+        "Uses npm ci (not npm install)",
+        "Runs as non-root user",
+        "Includes HEALTHCHECK",
+        "Creates .dockerignore excluding node_modules, .git, tests",
+        "Docker-compose includes PostgreSQL and Redis with health checks",
+        "K8s manifest includes resource limits, liveness/readiness probes"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Review this Dockerfile:\n\nFROM node:latest\nWORKDIR /app\nCOPY . .\nRUN npm install\nRUN npm run build\nENV DB_PASSWORD=mysecret123\nEXPOSE 3000\nCMD [\"node\", \"dist/index.js\"]",
+      "expected_output": "Should identify all issues: latest tag, no multi-stage, copies everything before deps, npm install not ci, secret in ENV, runs as root, no healthcheck, no .dockerignore.",
+      "assertions": [
+        "Flags 'latest' tag as unreproducible",
+        "Flags secret in ENV layer as critical security issue",
+        "Flags running as root",
+        "Recommends multi-stage build",
+        "Recommends copying package files before source",
+        "Recommends npm ci over npm install",
+        "Recommends adding HEALTHCHECK",
+        "Provides a corrected Dockerfile"
+      ]
+    }
+  ]
+}

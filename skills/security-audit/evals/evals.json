@@ -1,0 +1,52 @@
+{
+  "skill_name": "security-audit",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Run a security audit on my Express.js API. It handles user registration, login, payments via Stripe, and file uploads. We store user data in PostgreSQL and use JWT for authentication.",
+      "expected_output": "Should map the attack surface first (endpoints, auth boundaries, data flows), then systematically walk through OWASP categories with focus on auth, injection, and file upload. Should produce a severity-classified report.",
+      "assertions": [
+        "Maps the attack surface before diving into code",
+        "Reviews authentication implementation (JWT validation, password hashing)",
+        "Checks for IDOR vulnerabilities on user/payment endpoints",
+        "Reviews file upload for type/size/content validation",
+        "Checks Stripe webhook signature verification",
+        "Scans for SQL injection in database queries",
+        "Checks for hardcoded secrets",
+        "Runs or suggests npm audit for dependency vulnerabilities",
+        "Produces findings with severity, exploit scenario, and remediation",
+        "Goes deeper than code-reviewing's 8-item security checklist"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Check if this login endpoint is secure:\n\napp.post('/login', async (req, res) => {\n  const { email, password } = req.body;\n  const user = await db.query(`SELECT * FROM users WHERE email = '${email}'`);\n  if (!user) return res.status(401).json({ error: 'User not found' });\n  if (user.password !== md5(password)) return res.status(401).json({ error: 'Wrong password' });\n  const token = jwt.sign({ id: user.id, role: user.role }, 'my-secret-key');\n  res.json({ token });\n});",
+      "expected_output": "Should identify ALL major issues: SQL injection, MD5 hashing, hardcoded JWT secret, information leakage in error messages, no rate limiting, no input validation, token never expires.",
+      "assertions": [
+        "Identifies SQL injection (string interpolation in query) as Critical",
+        "Identifies MD5 password hashing as Critical (must use bcrypt/argon2)",
+        "Identifies hardcoded JWT secret as High",
+        "Identifies JWT with no expiration as High",
+        "Identifies information leakage (different errors for user-not-found vs wrong-password)",
+        "Identifies no rate limiting as Medium",
+        "Identifies no input validation on email/password as Medium",
+        "Provides concrete exploit scenarios for at least the top 3",
+        "Provides remediated code for each finding"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We're about to launch our SaaS product and our CTO wants a security review before the launch. We don't know where to start. Can you help?",
+      "expected_output": "Should provide a structured approach: map attack surface, prioritize by risk, start with auth and data handling, then systematic OWASP walkthrough. Should not overwhelm with a 100-item checklist on first interaction.",
+      "assertions": [
+        "Asks about the tech stack and architecture before starting",
+        "Prioritizes the audit areas by risk (auth, payments, data handling first)",
+        "Explains the audit approach before diving in",
+        "Does not dump the entire OWASP checklist as step 1",
+        "Suggests dependency audit as a quick early win",
+        "Mentions that this doesn't replace penetration testing",
+        "Offers to produce a formal security report"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "skill_name": "deployment-checklist",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I've finished implementing the payment integration feature. It adds Stripe webhook handling and stores payment events in the database. I'm ready to deploy to production. Can you run through the deployment checklist?",
+      "expected_output": "Should run the full checklist with emphasis on security (webhook signature verification), database (migration review), and high-risk assessment. Should classify this as high-risk due to payment handling.",
+      "assertions": [
+        "Classifies this as high-risk (payments)",
+        "Checks for webhook signature verification",
+        "Reviews database migrations for reversibility",
+        "Checks for hardcoded API keys/secrets",
+        "Recommends feature flag or canary deployment",
+        "Asks about rollback plan for the data migration",
+        "Runs or requests test suite execution"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "quick fix for a typo in the About page. can I just deploy this?",
+      "expected_output": "Should classify as low-risk, run a minimal checklist, and give a quick green light if checks pass.",
+      "assertions": [
+        "Classifies as low-risk (cosmetic change)",
+        "Runs abbreviated checklist, not the full thing",
+        "Still checks that tests pass",
+        "Does not over-process a simple change",
+        "Gives clear go/no-go recommendation"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We need to deploy a database migration that renames a column used by 3 services. We can't have downtime. Is this safe to deploy?",
+      "expected_output": "Should flag this as high-risk, recommend expand-contract pattern, and block a direct column rename. Should reference data-modeling skill for migration strategy.",
+      "assertions": [
+        "Flags column rename as dangerous in production",
+        "Recommends expand-contract migration pattern",
+        "Identifies that 3 services mean coordinated deployment is needed",
+        "Does NOT give a green light for a direct rename",
+        "Considers zero-downtime requirement",
+        "Suggests referencing the data-modeling skill for migration strategy"
+      ]
+    }
+  ]
+}
