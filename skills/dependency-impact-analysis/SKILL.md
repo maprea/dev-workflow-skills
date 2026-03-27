@@ -108,3 +108,4 @@ For each breaking change, define the coordination plan:
 - `feature-planning` — incorporate the dependency coordination into the implementation plan
 - `architecture-design` — if analysis reveals excessive coupling, document an ADR for reducing it
 - `data-modeling` — use for schema change design once impact is mapped
+- `deployment-repo` — when impact crosses repo boundaries in a polyrepo, use the deployment repo's compatibility matrix and contract tests to validate migration paths

@@ -71,6 +71,8 @@ Produce an ADR using the template at [templates/adr.md](templates/adr.md). Save 
 
 ADRs are immutable records. If a decision is superseded, create a new ADR that references the old one — don't edit the original.
 
+For visual architecture documentation (system diagrams, runtime flows, infrastructure topology), see the `architecture-documentation` skill.
+
 ## When to Split Decisions
 
 If the analysis reveals multiple independent decisions bundled together, split them into separate ADRs. For example, "How should we handle caching?" might split into:

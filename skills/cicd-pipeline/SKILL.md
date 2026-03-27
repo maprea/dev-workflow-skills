@@ -36,6 +36,8 @@ Follow the "fail fast" principle — cheapest and fastest checks run first:
 
 Parallelize independent stages. Lint, unit tests, and security scans can run simultaneously.
 
+**Multi-repo / deployment repo pattern:** If this service is part of a polyrepo with a deployment repo, the pipeline's deploy stages may update version pins in the deployment repo (via PR or `repository_dispatch`) rather than deploying directly to infrastructure. The deployment repo's own CI handles validation and promotion across environments. See `deployment-repo` for the orchestration pattern and `gitops-delivery` for automated cross-repo triggers.
+
 ### Step 3: Write the Configuration
 
 Write the pipeline config for the target platform. Use [templates/github-actions.md](templates/github-actions.md) as a starting point for GitHub Actions PR validation and production deploy workflows, plus a GitLab CI equivalent.
@@ -73,3 +75,10 @@ Quality gates prevent bad code from advancing:
 - **DRY**: Extract repeated steps into composite actions or shared workflows.
 - **Fail fast**: Order stages by speed and likelihood of failure.
 - **YAGNI**: Don't add matrix builds across 5 Node versions if you only support one.
+
+## Cross-Skill References
+
+- `deployment-repo` — for multi-service systems, the deployment repo handles system-level CI (contract tests, E2E, promotion)
+- `gitops-delivery` — pull-based delivery as an alternative to CI-driven `kubectl apply` / `helm upgrade`
+- `deployment-checklist` — pre-deployment verification gates to incorporate into the pipeline
+- `security-audit` — security scanning stages and SAST/DAST integration

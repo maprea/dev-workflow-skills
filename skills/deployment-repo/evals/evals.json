@@ -1,0 +1,44 @@
+{
+  "skill_name": "deployment-repo",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We have 5 microservices in separate GitHub repos (auth-service, user-service, billing-service, notification-service, api-gateway). They communicate via REST APIs and a shared event bus (RabbitMQ). We deploy to Kubernetes with 3 environments (dev, staging, prod). How should we set up a deployment repo to coordinate them?",
+      "expected_output": "Should produce a standard-tier deployment repo structure with Helm or Kustomize for K8s, a versions.yaml pinning all 5 services, contract testing strategy for REST APIs and event schemas, environment promotion flow, and E2E test orchestration.",
+      "assertions": [
+        "Recommends a separate deployment repository, not embedding deployment config in app repos",
+        "Produces a directory structure with version pins, per-environment configs, and E2E tests",
+        "Designs a versions.yaml (or equivalent) pinning exact versions of all 5 services",
+        "Recommends Helm or Kustomize for multi-environment K8s manifests (not plain manifests)",
+        "Includes contract testing strategy for both REST APIs and event schemas",
+        "Defines environment promotion flow: dev -> staging -> prod with appropriate gates",
+        "Addresses how a version bump in an app repo reaches the deployment repo",
+        "Cross-references containerization for Helm chart details and gitops-delivery for automation"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We're a small team with 3 services (FastAPI backend, Next.js frontend, PostgreSQL), all using Docker Compose for local dev and a single staging server. Is a deployment repo overkill for us?",
+      "expected_output": "Should validate the lightweight tier, recommend a simple deployment repo with docker-compose and version pinning, and explain how it scales up when needed. Should NOT push Kubernetes, Helm, or ArgoCD.",
+      "assertions": [
+        "Validates that a deployment repo is NOT overkill even for small teams",
+        "Recommends the lightweight tier with docker-compose and a simple version manifest",
+        "Does NOT recommend Kubernetes, Helm, or GitOps operators for this scale",
+        "Shows a minimal but useful repo structure (docker-compose, versions file, Makefile, .env.example)",
+        "Explains the immediate value: one command to run the full system, version tracking, onboarding",
+        "Acknowledges the pattern scales up as the team grows without requiring a rewrite"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "How do I write Pact contract tests between my frontend and backend API?",
+      "expected_output": "Should recognize this as a contract testing question that overlaps with but is not the core of the deployment-repo skill. Should provide brief context on how contract tests fit into the deployment repo pattern, then redirect to test-suite-design for implementation details.",
+      "assertions": [
+        "Recognizes this is primarily a testing question, not a deployment repo design question",
+        "Provides brief context on how contract tests relate to the deployment repo (they validate version compatibility)",
+        "References test-suite-design for detailed contract test implementation guidance",
+        "Does not attempt to be a full Pact tutorial within the deployment-repo skill"
+      ]
+    }
+  ]
+}

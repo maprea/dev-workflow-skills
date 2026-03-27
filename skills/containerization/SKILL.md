@@ -70,6 +70,16 @@ When creating K8s deployments:
 5. **Use namespaces** — Isolate environments (dev, staging, prod) and teams.
 6. **Define HPA** — Horizontal pod autoscaling based on CPU/memory or custom metrics.
 
+## When to Use Helm or Kustomize
+
+For multi-environment deployments or when using a deployment repo pattern, plain manifests become hard to manage. Choose based on your needs:
+
+- **Plain manifests**: Single environment, few resources, no templating needed. Start here.
+- **Kustomize**: Multiple environments with small differences (replicas, resource limits, image tags). Uses patches over a base — no templating language to learn.
+- **Helm**: Complex deployments with many configurable parameters, or when you need to package charts for reuse. More powerful but more complexity.
+
+See `deployment-repo` for organizing Helm charts and Kustomize overlays in a deployment repo, and `gitops-delivery` for using them with ArgoCD or Flux.
+
 ## Principles Applied
 
 - **KISS**: Start with the simplest configuration that works. Single-stage Docker build before multi-stage. Docker Compose before Kubernetes.
