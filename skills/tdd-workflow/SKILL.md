@@ -110,3 +110,4 @@ TDD is a design tool, not a coverage tool. Don't TDD:
 - **KISS**: Minimum code to pass forces simplicity.
 - **Functional Independence**: Tests that mock dependencies encourage decoupled design.
 - **DRY**: Refactoring phase explicitly targets duplication.
+- **FIRST**: Tests should be Fast, Independent, Repeatable, Self-validating, and Timely — see [references/test-quality.md](references/test-quality.md) for the full checklist and test smell detection.

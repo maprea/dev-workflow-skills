@@ -51,10 +51,13 @@ Evaluate each option through these lenses:
 - **Functional Independence**: Which gives the cleanest boundaries and lowest coupling?
 - **Separation of Concerns**: Which isolates responsibilities clearly?
 - **DRY**: Which avoids duplication of logic or data?
+- **SOLID**: Does the design respect Open/Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion? See [references/solid-principles.md](references/solid-principles.md).
+- **Clean Architecture**: Does the dependency direction point inward? Are business rules protected from infrastructure details? See [references/clean-architecture.md](references/clean-architecture.md).
+- **Component boundaries**: Are components cohesive (CCP, CRP) and acyclic (ADP)? Do dependencies flow toward stability (SDP)? See [references/component-principles.md](references/component-principles.md).
 
 Document which principles favor which option. Conflict between principles is expected — that's why it's a decision, not a formula.
 
-See [references/principles.md](references/principles.md) for deeper guidance on applying these principles to architecture decisions.
+See [references/principles.md](references/principles.md) for deeper guidance on applying KISS, YAGNI, coupling, and separation of concerns to architecture decisions.
 
 ### Step 5: Make a Recommendation
 

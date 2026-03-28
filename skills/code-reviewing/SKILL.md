@@ -72,7 +72,7 @@ These are the lenses through which code is examined:
 
 **Readability**: Can someone unfamiliar with this code understand it in one reading? Good naming, appropriate comments (why, not what), manageable function length.
 
-**Error Handling**: Are errors caught, logged, and handled appropriately? Are error messages helpful?
+**Error Handling**: Are errors caught, logged, and handled appropriately? Are error messages helpful? See [references/error-handling.md](references/error-handling.md) for detailed patterns (null safety, exception context, caller-oriented exceptions).
 
 ## Tone Guidelines
 
@@ -81,3 +81,4 @@ These are the lenses through which code is examined:
 - Ask questions when uncertain: "Is this intentionally returning null here?" invites discussion
 - Acknowledge good work: If something is well-written, say so
 - Propose, don't command: "What do you think about..." respects the author's judgment
+- Apply the Boy Scout Rule: note small cleanup opportunities near the changed code — a renamed variable, a dead import removed. These compound over time.

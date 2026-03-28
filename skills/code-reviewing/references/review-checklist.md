@@ -43,6 +43,29 @@ Flag when you see:
 - Files that are the go-to place for "anything related to X"
 - Mix of business logic and I/O in the same function
 
+### Naming Quality
+Flag when you see:
+- Names that require reading the implementation to understand (`data`, `info`, `temp`, `result`, `handle`)
+- Disinformation: names that imply something incorrect (`accountList` when it's actually a map, `hp` that could mean hypotenuse or hit points)
+- Single-letter variables outside of tiny lambda/loop scopes
+- Abbreviations that aren't universally understood in the domain
+- Class names that aren't nouns or noun phrases (`ProcessData`, `ManageStuff`)
+- Method names that aren't verb phrases (`data()` instead of `fetchData()`, `valid()` instead of `isValid()`)
+- Inconsistent vocabulary: `fetch` in one place, `get` in another, `retrieve` in a third for the same concept
+- Names that differ only in capitalization or by a number suffix (`user1`, `user2`)
+
+Don't flag:
+- Short names in tiny scopes where context is obvious (`i` in a 3-line loop, `e` in a catch block)
+- Domain abbreviations the team has agreed on (`DTO`, `API`, `URL`)
+
+### Function Size and Structure
+Flag when you see:
+- Functions that do more than one thing — look for sections separated by blank lines or comments, each doing a different job
+- Mixed levels of abstraction in one function: high-level orchestration mixed with low-level bit manipulation or string parsing
+- More than 2-3 function arguments — flag especially if several are the same type (easy to mix up)
+- Side effects hidden behind the function name: a function called `checkPermission` that also logs analytics and updates a timestamp
+- **Command-Query Separation violations**: A method that both changes state AND returns a value. Methods should either be commands (do something, return void) or queries (return something, change nothing). Mixing them surprises callers and makes code harder to reason about.
+
 ### Functional Independence
 Flag when you see:
 - Modules reaching into other modules' internals
@@ -85,6 +108,29 @@ Flag when you see:
 **Feature envy**: A method that uses more data from another class than from its own. The method probably belongs in the other class.
 
 **Shotgun surgery**: One logical change requires modifications across many files. Indicates poor encapsulation.
+
+**Data clumps**: The same group of variables appears together in multiple places (e.g., `x, y, z` or `street, city, zip`). Extract them into a class or struct.
+
+**Middle man**: A class that delegates almost everything to another class without adding value. Inline the delegation.
+
+**Inappropriate intimacy**: Two classes that access each other's private details excessively. Restructure to restore proper boundaries.
+
+## Comments: Good vs Bad
+
+**Good comments** (keep them):
+- Intent explanation: *why* a non-obvious approach was chosen
+- Consequence warnings: "changing this format breaks the mobile parser"
+- TODO with ticket reference: `// TODO(PROJ-123): replace with batch API when available`
+- Legal or licensing notices required by policy
+
+**Bad comments** (flag them):
+- Redundant comments that restate the code: `// increment counter` above `counter++`
+- Commented-out code — it lives in version control, delete it
+- Journal comments ("added on 2024-01-15 by Alice") — git log handles this
+- Mandated javadoc/docstrings on every function regardless of complexity — these go stale and add noise
+- Misleading comments that don't match what the code does
+
+**Rule**: If code needs a comment to explain *what* it does, refactor the code so it doesn't need one. Comments should explain *why*, not *what*.
 
 ## Language-Specific Patterns
 

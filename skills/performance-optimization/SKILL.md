@@ -35,6 +35,7 @@ The bottleneck is almost always in one of these areas. Check in this order (most
 4. **Memory usage** — Leaks, loading entire datasets into memory, unbounded caches
 5. **Network/I/O** — Large payloads, no compression, chatty protocols, missing CDN
 6. **Serialization** — Expensive JSON parsing/generation, unnecessary data transformation
+7. **Concurrency issues** — Race conditions, lock contention, thread pool exhaustion, async bottlenecks. See [references/concurrency.md](references/concurrency.md) for patterns and common bugs.
 
 See [references/bottleneck-patterns.md](references/bottleneck-patterns.md) for the detailed detection guide.
 

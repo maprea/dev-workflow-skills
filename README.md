@@ -1,6 +1,6 @@
 # Dev Workflow Skills for Claude Code
 
-A curated collection of 36 Claude Code Agent Skills designed for senior software engineers who want to enforce best practices, maintain high code quality, and accelerate their development workflow.
+A curated collection of 39 Claude Code Agent Skills designed for senior software engineers who want to enforce best practices, maintain high code quality, and accelerate their development workflow.
 
 ## Philosophy
 
@@ -8,7 +8,7 @@ These skills encode the methodology of a disciplined engineer: DRY, YAGNI, KISS,
 
 ## Skills Overview
 
-### Software Engineering (20 skills)
+### Software Engineering (21 skills)
 
 | Skill | Phase | Purpose |
 |-------|-------|---------|
@@ -32,6 +32,7 @@ These skills encode the methodology of a disciplined engineer: DRY, YAGNI, KISS,
 | `configuration-strategy` | All Phases | Design environment config, secrets management, and feature flag hierarchy for a feature or service |
 | `technical-debt-review` | Improvement | Strategic codebase health assessment — identify hotspots, categorize debt, produce remediation roadmap |
 | `dependency-impact-analysis` | All Phases | Map blast radius before changing an API, schema, or shared component — classify breaking vs. additive |
+| `architecture-documentation` | All Phases | Multi-level architecture diagrams (context, container, component, runtime) |
 
 ### Design (3 skills)
 
@@ -41,13 +42,15 @@ These skills encode the methodology of a disciplined engineer: DRY, YAGNI, KISS,
 | `frontend-architecture` | React component hierarchy, state management, design tokens, data fetching, code organization |
 | `accessibility-design` | WCAG compliance, semantic HTML, ARIA patterns, keyboard navigation, focus management, screen readers |
 
-### DevOps (3 skills)
+### DevOps (5 skills)
 
 | Skill | Purpose |
 |-------|---------|
 | `containerization` | Dockerfiles, docker-compose, Kubernetes manifests with security and efficiency best practices |
 | `cicd-pipeline` | CI/CD pipeline design for GitHub Actions, GitLab CI with quality gates and safe deploys |
 | `infrastructure-as-code` | Terraform/IaC modules with state management, security, and environment separation |
+| `deployment-repo` | Multi-repo deployment orchestration and environment promotion |
+| `gitops-delivery` | GitOps-based delivery with Flux/ArgoCD patterns |
 
 ### MLOps (3 skills)
 

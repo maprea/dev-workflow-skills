@@ -156,3 +156,4 @@ For high-risk upgrades (framework major version, ORM, auth library):
 - **KISS**: Prefer libraries with small, focused APIs over Swiss-army-knife frameworks.
 - **DRY**: A well-chosen dependency eliminates duplication across projects — but a bad choice creates maintenance debt across projects.
 - **Functional Independence**: Prefer libraries that don't deeply couple to your application architecture. You should be able to swap them out.
+- **Boundaries**: Wrap third-party APIs with thin adapter layers — depend on your own abstractions, not on library specifics. This limits blast radius when a dependency changes or is replaced, and keeps your business logic free of third-party types. Only skip wrapping for pervasive infrastructure (e.g., your web framework, your ORM) where the cost of wrapping exceeds the cost of coupling.
