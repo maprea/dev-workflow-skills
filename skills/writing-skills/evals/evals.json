@@ -1,0 +1,41 @@
+{
+  "skill_name": "writing-skills",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to add a new skill to this library for designing caching strategies (cache invalidation, TTLs, cache layers). Help me write it.",
+      "expected_output": "Should follow the authoring loop: clarify the trigger scenarios, draft a WHEN-focused description in the repo's `<purpose>. Triggers: ... . <boundary>` format under ~350 chars, keep SKILL.md tight with deep detail in references/, and produce exactly 3 evals. Should register it in skill-router.",
+      "assertions": [
+        "Writes a description focused on when to use it (with a Triggers keyword list), not the internal workflow",
+        "Keeps the description near ~350 chars",
+        "Uses progressive disclosure (tight SKILL.md, references/ for deep detail)",
+        "Produces exactly 3 evals (happy / edge / scope boundary) with verifiable assertions",
+        "Mentions registering the skill in skill-router",
+        "Does not over-stuff SKILL.md with general knowledge Claude already has"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "My `data-modeling` skill never seems to trigger even when people ask about schema design. How do I fix it?",
+      "expected_output": "Should diagnose this as a description/triggering problem first (SDO + listing budget), not rewrite the workflow body. Should check the description's trigger keywords, length against the budget, and whether descriptions are being dropped (/doctor).",
+      "assertions": [
+        "Treats it as a description/triggering issue, not a body-content issue",
+        "Inspects the trigger keywords and suggests widening them to match user phrasing",
+        "Checks the description length against the ~350-char listing budget",
+        "Mentions /doctor / the listing budget as a possible cause of dropped descriptions",
+        "Does not immediately rewrite the workflow steps"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Can you write the API documentation for our payments service?",
+      "expected_output": "This is a request to write docs for a project, not to author a skill. Should not invoke the skill-writing workflow; should hand off to project-documentation (or api-design).",
+      "assertions": [
+        "Recognizes this is not about authoring a library skill",
+        "Does not apply the skill-writing loop",
+        "Hands off to project-documentation (and/or api-design) as the right skill",
+        "Does not produce a SKILL.md"
+      ]
+    }
+  ]
+}

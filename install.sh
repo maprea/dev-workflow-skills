@@ -33,6 +33,7 @@ FREQUENT_SKILLS=(
   test-suite-design
   ui-ux-design
   verification-before-completion
+  writing-skills
 )
 
 usage() {

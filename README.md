@@ -1,6 +1,6 @@
 # Dev Workflow Skills for Claude Code
 
-A curated collection of 40 SDLC Claude Code Agent Skills (plus a meta `skill-router` that dispatches to them) designed for senior software engineers who want to enforce best practices, maintain high code quality, and accelerate their development workflow.
+A curated collection of 40 SDLC Claude Code Agent Skills (plus two meta skills — `skill-router` and `writing-skills`) designed for senior software engineers who want to enforce best practices, maintain high code quality, and accelerate their development workflow.
 
 ## Philosophy
 
@@ -8,11 +8,12 @@ These skills encode the methodology of a disciplined engineer: DRY, YAGNI, KISS,
 
 ## Skills Overview
 
-### Meta (1 skill)
+### Meta (2 skills)
 
 | Skill | Purpose |
 |-------|---------|
 | `skill-router` | Entry point and dispatcher — maps an intent to the right skill and lays out the Golden Path workflow chains. Invoke it when unsure which skill applies. Pairs with the optional [SessionStart hook](hooks/README.md) that nudges Claude to consult it. |
+| `writing-skills` | How to author, edit, and pressure-test skills in this library — description/budget rules, progressive disclosure, the 3-eval rule, and TDD-for-docs. The installable companion to the [Building Skills](#building-skills) guide below. |
 
 ### Software Engineering (22 skills)
 
@@ -159,7 +160,7 @@ Each skill includes an `evals/` directory with test scenarios:
 
 ## Building Skills
 
-This section covers what you need to know to author a new skill or modify an existing one.
+This section covers what you need to know to author a new skill or modify an existing one. It's also packaged as the installable `writing-skills` skill, which adds the SDO description rule and pressure-testing (TDD-for-docs) on top of these rules.
 
 ### Description Is Everything
 
