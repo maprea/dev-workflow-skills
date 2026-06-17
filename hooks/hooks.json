@@ -1,0 +1,16 @@
+{
+  "_comment": "Reference snippet. Merge the `hooks` block into your .claude/settings.json (project) or ~/.claude/settings.json (global). Replace HOOK_PATH with the absolute path to session-start.sh printed by `./install.sh --hook`. See hooks/README.md.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "HOOK_PATH"
+          }
+        ]
+      }
+    ]
+  }
+}

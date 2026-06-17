@@ -26,6 +26,7 @@ FREQUENT_SKILLS=(
   project-documentation
   refactoring
   security-audit
+  skill-router
   tdd-workflow
   technical-debt-review
   test-data-strategy
@@ -42,6 +43,8 @@ Install Claude Code skills from this repo.
 Options:
   -g, --global    Install to ~/.claude/skills/ (default: ./.claude/skills/)
   -a, --all       Install all skills (default: frequent skills only)
+  -k, --hook      Also install the opt-in SessionStart hook (prints the
+                  settings.json snippet to enable it; never edits settings)
   -l, --list      List available skills
   -h, --help      Show this help
 
@@ -59,12 +62,14 @@ EOF
 
 GLOBAL=false
 ALL=false
+HOOK=false
 SELECTED=()
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -g|--global) GLOBAL=true; shift ;;
     -a|--all) ALL=true; shift ;;
+    -k|--hook) HOOK=true; shift ;;
     -l|--list)
       echo "Available skills:"
       ls "$SKILLS_DIR" | sed 's/^/  /'
@@ -106,5 +111,40 @@ for skill in "${SELECTED[@]}"; do
   cp -r "$src" "$DEST/"
   echo "Installed: $skill -> $DEST/$skill"
 done
+
+if $HOOK; then
+  REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
+  HOOK_SRC="$REPO_ROOT/hooks/session-start.sh"
+  if [[ ! -f "$HOOK_SRC" ]]; then
+    echo "Error: hook script not found at $HOOK_SRC" >&2
+    errors=$((errors + 1))
+  else
+    CLAUDE_DIR="$(dirname "$DEST")"
+    HOOK_DEST_DIR="$CLAUDE_DIR/hooks"
+    mkdir -p "$HOOK_DEST_DIR"
+    cp "$HOOK_SRC" "$HOOK_DEST_DIR/session-start.sh"
+    chmod +x "$HOOK_DEST_DIR/session-start.sh"
+    HOOK_PATH="$HOOK_DEST_DIR/session-start.sh"
+    SETTINGS="$CLAUDE_DIR/settings.json"
+    echo "Installed hook script -> $HOOK_PATH"
+    echo ""
+    echo "To enable it, merge this into $SETTINGS (the installer does NOT edit settings for you):"
+    echo ""
+    cat <<EOF
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|clear|compact",
+        "hooks": [
+          { "type": "command", "command": "$HOOK_PATH" }
+        ]
+      }
+    ]
+  }
+EOF
+    echo ""
+    echo "Then start a new session and run /doctor to confirm it's registered."
+  fi
+fi
 
 [[ $errors -eq 0 ]] || exit 1

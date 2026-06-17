@@ -1,12 +1,18 @@
 # Dev Workflow Skills for Claude Code
 
-A curated collection of 39 Claude Code Agent Skills designed for senior software engineers who want to enforce best practices, maintain high code quality, and accelerate their development workflow.
+A curated collection of 39 SDLC Claude Code Agent Skills (plus a meta `skill-router` that dispatches to them) designed for senior software engineers who want to enforce best practices, maintain high code quality, and accelerate their development workflow.
 
 ## Philosophy
 
 These skills encode the methodology of a disciplined engineer: DRY, YAGNI, KISS, functional independence, TDD, clean architecture, and thoughtful design decisions. Each skill guides Claude Code through a specific phase of the SDLC, ensuring consistent quality without sacrificing speed.
 
 ## Skills Overview
+
+### Meta (1 skill)
+
+| Skill | Purpose |
+|-------|---------|
+| `skill-router` | Entry point and dispatcher — maps an intent to the right skill and lays out the Golden Path workflow chains. Invoke it when unsure which skill applies. Pairs with the optional [SessionStart hook](hooks/README.md) that nudges Claude to consult it. |
 
 ### Software Engineering (21 skills)
 
@@ -91,6 +97,24 @@ git commit -m "feat: add dev workflow skills for Claude Code"
 cp -r skills/* ~/.claude/skills/
 ```
 
+### Using the installer
+
+`install.sh` installs the frequent-skills subset (including `skill-router`) by default:
+
+```bash
+./install.sh                 # frequent skills -> ./.claude/skills/
+./install.sh --all --global  # all skills -> ~/.claude/skills/
+./install.sh --hook          # also set up the opt-in SessionStart hook (see hooks/README.md)
+```
+
+### Activation (optional hook)
+
+Skills trigger from their descriptions, but under-triggering is the most common
+failure mode at scale. The `skill-router` skill is the entry point; the optional
+[SessionStart hook](hooks/README.md) injects a short pointer at session start so
+Claude consults the router before substantial SDLC work. It's a nudge, not a
+gate — the user's instructions always take precedence.
+
 ## Skill Architecture
 
 Each skill follows the progressive disclosure pattern:
@@ -161,7 +185,7 @@ If you install many skills, raise the budget in `~/.claude/settings.json`:
 { "skillListingBudgetFraction": 0.02 }
 ```
 
-At 2% (~4k tokens of context budget), the full 39 skills in this repo fit comfortably.
+At 2% (~4k tokens of context budget), the full skill set in this repo fits comfortably.
 
 ### Frontmatter Fields
 
