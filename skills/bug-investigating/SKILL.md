@@ -9,6 +9,12 @@ allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 
 Guide systematic debugging to find root causes, not just symptoms. Good debugging is methodical — form hypotheses, test them, narrow down, and verify the fix.
 
+## ⛔ The Iron Law
+
+**No fix without a confirmed root cause and a failing test that reproduces the bug.**
+
+A change that makes the symptom disappear without an explanation of *why* it worked is a guess, not a fix — and guesses regress. If you can't articulate the mechanism that produced the wrong behavior, you have not found the root cause yet.
+
 ## Workflow
 
 ### Step 1: Gather Evidence
@@ -102,6 +108,23 @@ See [references/common-bugs.md](references/common-bugs.md) for patterns of frequ
 - **Fixing without a test**: You'll be back here in a month.
 
 See [references/debugging-patterns.md](references/debugging-patterns.md) for hypothesis-driven debugging technique and language-specific tips.
+
+## Rationalizations to reject
+
+| Excuse | Reality |
+|--------|---------|
+| "This null check will probably fix it" | If you can't explain why the value is null, you're masking a symptom — it will resurface elsewhere. |
+| "It's probably flaky / the library's fault" | Start in your own code. Blame is not a diagnosis. |
+| "I can't reproduce it, but this should help" | Unreproduced means unverifiable — you won't know if the change actually worked. |
+| "Let me just try a few things" | Shotgun debugging. Every change must test a stated hypothesis. |
+| "The fix is obvious, no need for a test" | Without a regression test, the bug comes back and nobody notices. |
+
+## Red flags — stop and correct course
+
+- Changing code without a written hypothesis.
+- Proposing a fix before you've reproduced the bug.
+- The fix works but you can't explain the mechanism.
+- Adding defensive checks at the symptom instead of the source.
 
 ## Cross-Skill References
 

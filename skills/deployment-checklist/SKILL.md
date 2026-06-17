@@ -9,6 +9,12 @@ allowed-tools: Read, Grep, Glob, Write, Edit
 
 Ensure code is production-ready before deploying. This skill runs through a structured verification process that catches common deployment failures before they reach users.
 
+## ⛔ The Iron Law
+
+**Don't check a box you haven't verified.**
+
+Every checked item is backed by evidence — a command you ran in this session or code you read — not memory or assumption. "Should be fine" is not a verification. A blocked deploy is far cheaper than a production incident, so when a gate fails, stop and fix it before proceeding.
+
 ## Workflow
 
 ### Step 1: Assess the Change
@@ -100,6 +106,23 @@ Everything else can be addressed in a follow-up, but these four prevent the wors
 - **YAGNI**: Don't deploy speculative configuration or unused feature flags. Unused config is future confusion.
 
 See [references/pre-deploy-gates.md](references/pre-deploy-gates.md) for environment-specific checklists, schema migration safety, and rollback trigger criteria.
+
+## Rationalizations to reject
+
+| Excuse | Reality |
+|--------|---------|
+| "Tests passed in CI yesterday" | Verify against the exact commit being deployed, now — not a stale run. |
+| "It's a tiny change, skip the checklist" | Tiny changes cause outages too. Run at least the four-item minimum. |
+| "Migrations are probably reversible" | "Probably" is not verified. Confirm the down-path exists and runs. |
+| "We'll add monitoring after launch" | You can't observe an incident you never instrumented. |
+| "No time for staging" | Skipping staging on a high-risk change is how data-loss incidents start. |
+
+## Red flags — stop and correct course
+
+- Marking items complete from memory rather than checking.
+- "Should be fine" / "probably works" language about any gate.
+- Deploying a High-risk change with no rollback plan.
+- Bundling a risky migration and a feature in the same deploy.
 
 ## Cross-Skill References
 

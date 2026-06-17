@@ -13,6 +13,12 @@ Perform a structured security assessment of an application. This skill goes far 
 
 This skill analyzes code, configuration, and architecture for security vulnerabilities through static analysis and design review. It does not replace penetration testing, but it prepares code for one by catching the issues a pentester would find.
 
+## ⛔ The Iron Law
+
+**"No obvious problems" is not a pass.**
+
+Absence of evidence is not evidence of security. Every clearance is backed by evidence — the specific control you read and where it's enforced — and every finding cites the exact code path plus a concrete exploit scenario. If you can't write the exploit, you haven't assessed the risk; if you can, it isn't theoretical.
+
 ## Workflow
 
 ### Step 1: Define the Attack Surface
@@ -120,3 +126,21 @@ Output the audit report using the template at [templates/security-report.md](tem
 - **Least privilege**: Every component should have the minimum permissions it needs.
 - **Fail secure**: When something goes wrong, it should deny access, not grant it.
 - **KISS**: Simpler security is more auditable security. Complex auth flows breed bugs.
+
+## Rationalizations to reject
+
+| Excuse | Reality |
+|--------|---------|
+| "I didn't see anything obviously wrong" | You audited the absence of obvious bugs, not the presence of security. Trace each control. |
+| "The framework handles that" | Verify the control is actually enabled and configured correctly — don't assume. |
+| "Auth is checked in the UI" | UI checks are not authorization. Confirm server-side enforcement on every protected endpoint. |
+| "This input is internal/trusted" | Trust boundaries shift. Validate anyway — defense in depth. |
+| "That CVE doesn't apply to us" | Confirm the vulnerable code path is unused before dismissing it. |
+| "It's only a theoretical risk" | If you can't write the exploit scenario, you haven't assessed it. |
+
+## Red flags — stop and correct course
+
+- Signing off a category without naming the file/endpoint you verified.
+- A finding with no concrete exploit path.
+- Concluding "secure" because nothing jumped out.
+- Trusting that a control exists without reading where it's enforced.

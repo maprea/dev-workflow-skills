@@ -9,6 +9,12 @@ allowed-tools: Read, Grep, Glob, Write, Edit
 
 Design the undo plan before deploying — not during a production incident. A deployment without a rollback plan is a bet that nothing will go wrong.
 
+## ⛔ The Iron Law
+
+**If you can't undo it, don't ship it yet.**
+
+Every change is classified by rollback complexity before deploy, and every non-Simple change has a written rollback procedure that has been *tested* — not just imagined. Decide rollback before the incident, never during it: the minutes you'd spend designing an undo mid-incident are the minutes users are down.
+
 ## Step 1: Analyze the Deployment
 
 List every change being deployed:
@@ -85,6 +91,23 @@ Use [templates/rollback-plan.md](templates/rollback-plan.md) for the full plan f
 - **YAGNI**: Don't deploy a change you can't roll back without a documented, tested plan. If you can't undo it, don't ship it yet.
 - **Defense in depth**: Multiple rollback options (flag → revert → data migration reversal) provide fallbacks when the first option isn't enough.
 - **Fail fast**: Define rollback triggers before deploying (see `deployment-checklist`). Waiting until an incident to decide when to rollback wastes critical time.
+
+## Rationalizations to reject
+
+| Excuse | Reality |
+|--------|---------|
+| "We'll figure out rollback if it breaks" | Designing rollback mid-incident wastes the minutes that matter most. |
+| "The migration is reversible, trust me" | Reversible in theory ≠ tested. Run the reverse on production-sized data first. |
+| "It's behind a flag, that's enough" | Only if the off-state was defined and tested before deploy. |
+| "Rollback is unlikely, skip the plan" | A rollback plan is insurance — you write it before you need it, not after. |
+| "Additive column, no rollback needed" | Confirm old code ignores it and document the no-op explicitly. |
+
+## Red flags — stop and correct course
+
+- An Irreversible change with no documented partial-rollback and no sign-off.
+- A reverse migration that has never actually been executed.
+- A feature flag whose off-state was never tested in staging.
+- The estimated rollback time is unknown.
 
 ## Cross-Skill References
 

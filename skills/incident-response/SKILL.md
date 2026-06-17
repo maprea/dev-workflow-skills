@@ -9,6 +9,12 @@ allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 
 Resolve production incidents quickly and safely. Under pressure, the instinct to jump to fixes causes more harm than good — this workflow keeps the response structured without slowing it down.
 
+## ⛔ The Iron Law
+
+**Mitigate before you investigate; never declare resolved without verification evidence.**
+
+Stopping user impact and understanding the cause are separate jobs — don't trade the first for the second. And under pressure, a forward fix you haven't reviewed or verified often creates a second incident: prefer the blunt, reversible mitigation now and confirm recovery with data before declaring the incident over.
+
 ## Step 1: Triage — Scope and Severity
 
 Spend 2-3 minutes here, not more.
@@ -96,6 +102,25 @@ Time-box investigation phases: 15 minutes to identify the probable cause. If not
 - **Blameless culture**: Incidents are caused by systems, not people. Focus on what the system allowed, not who triggered it.
 - **Communication over silence**: Even "we don't know yet" is better than silence. Stakeholders will escalate if they don't hear anything.
 - **Separate mitigation from investigation**: Stopping user impact and understanding root cause are different work. Don't conflate them.
+
+## Rationalizations to reject
+
+Time pressure makes these tempting. Reject them anyway.
+
+| Excuse | Reality |
+|--------|---------|
+| "Let me find the root cause first" | Every minute investigating is a minute users stay broken. Mitigate first. |
+| "I know what's wrong — quick forward fix" | Forward fixes under pressure cause secondary incidents; a rollback is usually faster and safer. |
+| "Skip code review, it's an emergency" | A second set of eyes is cheapest exactly when the stakes are highest. |
+| "Error rate looks better, call it resolved" | "Looks better" is not baseline. Verify error rate, latency, and end-to-end function. |
+| "I'll update people once it's fixed" | Silence makes stakeholders escalate. Send a status even when it's "we don't know yet." |
+
+## Red flags — stop and correct course
+
+- Debugging root cause while users are still impacted and no mitigation is live.
+- Deploying a forward fix you haven't reviewed.
+- Declaring resolved from a single metric or a quick glance.
+- No timestamped action log being kept as you go.
 
 ## Cross-Skill References
 

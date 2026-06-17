@@ -9,6 +9,12 @@ allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 
 Guide implementation through the red-green-refactor cycle. TDD produces code that is testable by design, has a living specification, and tends toward simpler solutions because you only write what's needed to pass the next test.
 
+## ⛔ The Iron Law
+
+**No production code without a failing test you have watched fail.**
+
+If you wrote code before the test, delete it and restart from the test — don't keep it "as reference" or "adapt it" while writing the test. A test you didn't watch fail proves nothing: you don't know whether it tests the right thing. This is the one rule that the rest of the workflow protects.
+
 ## The Cycle
 
 ```
@@ -113,3 +119,23 @@ TDD is a design tool, not a coverage tool. Don't TDD:
 - **Functional Independence**: Tests that mock dependencies encourage decoupled design.
 - **DRY**: Refactoring phase explicitly targets duplication.
 - **FIRST**: Tests should be Fast, Independent, Repeatable, Self-validating, and Timely — see [references/test-quality.md](references/test-quality.md) for the full checklist and test smell detection.
+
+## Rationalizations to reject
+
+These are the excuses that lead to skipping the test. None of them hold up.
+
+| Excuse | Reality |
+|--------|---------|
+| "It's too simple to test" | Simple code still breaks. The test costs 30 seconds; the regression costs an afternoon. |
+| "I'll add the tests after" | Tests written after the code pass immediately — they prove the code does what it does, not what it should. |
+| "I already tested it manually" | Manual checks aren't repeatable and don't guard against the next regression. |
+| "Deleting working code is wasteful" | Sunk cost. Unverified code is debt, not progress. |
+| "Tests-after achieve the same thing" | Tests-first ask "what should this do?"; tests-after ask "what does this do?" — different specs. |
+| "TDD will slow me down" | Debugging untested code is slower than writing the test first. |
+
+## Red flags — stop and correct course
+
+- You're writing implementation and will "get to the test next."
+- A new test passes the first time you run it (you never saw RED).
+- You can't explain why the test failed in the RED phase.
+- You're glancing at not-yet-deleted draft code while writing the "test-first" version.
