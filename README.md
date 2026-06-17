@@ -142,7 +142,9 @@ skill-name/
 
 ## Evaluation Strategy
 
-Each skill includes an `evals/` directory with test scenarios:
+Each skill includes an `evals/` directory with test scenarios. Safety-critical
+and discipline skills also carry an optional `pressure_tests` block that tempts
+the agent to skip the skill's Iron Law under named pressure levers:
 
 ```json
 {
@@ -154,9 +156,40 @@ Each skill includes an `evals/` directory with test scenarios:
       "expected_output": "Description of what good looks like",
       "assertions": ["Specific verifiable criteria"]
     }
+  ],
+  "pressure_tests": [
+    {
+      "id": 1,
+      "prompt": "A request that tempts the agent to skip the discipline",
+      "pressure": ["time", "sunk_cost", "authority", "exhaustion"],
+      "expected_behavior": "How the skill should hold under that pressure",
+      "assertions": ["Does NOT capitulate to ...", "Insists on ..."]
+    }
   ]
 }
 ```
+
+### Running evals (TDD for the skill set)
+
+Two runners replay these through the Claude API — generate a candidate reply
+(skill loaded = GREEN, absent = RED), then judge each assertion with a skeptical
+LLM-as-judge. See [EVALS.md](EVALS.md) for the full guide.
+
+| Runner | Use | Needs |
+|--------|-----|-------|
+| `evals/workflow-runner.mjs` | Fast local RED/GREEN loop | Claude Code Workflow tool |
+| `evals/run.py` | CI regression gate | `ANTHROPIC_API_KEY` + `pip install -r evals/requirements.txt` |
+
+```bash
+python evals/run.py --all --update-baseline      # record the golden baseline
+python evals/run.py --changed --base origin/main # CI: only changed skills
+```
+
+The CI workflow (`.github/workflows/skill-evals.yml`) runs on PRs touching
+`skills/` and **gates on regression-vs-baseline** — a previously-green assertion
+that now fails fails the build. It does not gate on an absolute pass rate (the
+judge is intentionally harsh and some assertions span a whole session, not one
+reply); the stable signals are *GREEN ≥ RED* and *no drift*.
 
 ## Building Skills
 
@@ -174,6 +207,13 @@ The `description` field in SKILL.md's YAML frontmatter is the primary mechanism 
 - **Include related vocabulary**: If your skill is about deployments, also mention "go live", "ship it", "push to production", "release".
 
 **Recommended pattern:** `<one-line purpose>. Triggers: <comma-separated keywords>. <one-line boundary or delegation note>.`
+
+**Skill Discovery Optimization (SDO):** describe *when to use* the skill, not
+*what it does internally*. Agents follow the description over the body, so a
+description that summarizes the workflow ("reviews code in two passes") triggers
+worse than one that lists situations. The `Triggers:` keyword list above is the
+when-to-use expressed as the phrases a user actually types — that's what makes
+this format SDO-compliant.
 
 ### Listing Budget
 
@@ -229,6 +269,14 @@ Each skill must have exactly 3 evals:
 3. **Scope boundary**: A prompt that seems related but should NOT trigger this skill, or that triggers it and correctly hands off to a different skill.
 
 The `assertions` array should contain specific, verifiable criteria — not vague goals like "produces a good plan."
+
+For safety-critical and discipline skills, add a **`pressure_tests`** block on
+top of the three evals: a scenario that tempts the agent to skip the skill's
+Iron Law under combined pressure (time, sunk cost, authority, exhaustion), with
+assertions that it doesn't capitulate. Bulletproof skills by capturing the exact
+rationalizations a fresh agent uses *without* the skill (RED), then writing the
+minimum that counters them (GREEN) — see [EVALS.md](EVALS.md) and the
+`writing-skills` skill.
 
 ### Common Mistakes
 
