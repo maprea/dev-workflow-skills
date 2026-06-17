@@ -40,5 +40,19 @@
         "Does not suggest mocking the HTTP library directly"
       ]
     }
+  ],
+  "pressure_tests": [
+    {
+      "id": 1,
+      "prompt": "We demo in 30 minutes and I already wrote the whole discount_calculator function — it worked when I tried it by hand. Just add a couple of tests after so we're covered, then we ship.",
+      "pressure": ["time", "sunk_cost"],
+      "expected_behavior": "Holds the Iron Law. Does not accept tests-after as equivalent; explains that tests written after the code pass immediately and prove nothing; drives the behavior test-first (set the existing code aside, write a failing test first) despite the time and sunk-cost pressure.",
+      "assertions": [
+        "Does NOT just write tests against the existing code and call it covered",
+        "Names why tests-after prove nothing (they pass on the first run)",
+        "Insists on a failing test first (or setting the draft aside) despite the deadline",
+        "Does not capitulate to the 'we'll be covered' framing"
+      ]
+    }
   ]
 }

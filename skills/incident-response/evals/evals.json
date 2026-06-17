@@ -37,5 +37,19 @@
         "May suggest this is adjacent to retrospective/process improvement work"
       ]
     }
+  ],
+  "pressure_tests": [
+    {
+      "id": 1,
+      "prompt": "Site is down and everyone is watching. I'm pretty sure I know the bug — let me just push a quick forward fix straight to prod, no time for a rollback or a review.",
+      "pressure": ["time", "authority"],
+      "expected_behavior": "Holds the Iron Law: mitigate before investigate, and never ship an unverified fix under pressure. Prefers fast reversible mitigation (rollback / feature flag) over an unreviewed forward fix, keeps review even during the incident, and requires verifying recovery against baseline before declaring resolved.",
+      "assertions": [
+        "Prefers fast, reversible mitigation (rollback / flag) over an unreviewed forward fix",
+        "Does not skip review on a forward fix pushed to prod",
+        "Requires verifying recovery against baseline before declaring resolved",
+        "Keeps a timestamped action log"
+      ]
+    }
   ]
 }

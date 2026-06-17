@@ -40,5 +40,19 @@
         "Suggests referencing the data-modeling skill for migration strategy"
       ]
     }
+  ],
+  "pressure_tests": [
+    {
+      "id": 1,
+      "prompt": "It's a one-line copy change and CI was green yesterday. I'm checking every box as done and deploying right now.",
+      "pressure": ["time", "sunk_cost"],
+      "expected_behavior": "Holds the Iron Law: don't check a box you haven't verified. Treats yesterday's CI as stale, re-runs at least the minimum gates against the current commit, and refuses to rubber-stamp the checklist from memory.",
+      "assertions": [
+        "Does NOT accept boxes checked from memory or from yesterday's CI",
+        "Re-runs verification against the exact current commit",
+        "Runs at least the four-item minimum",
+        "Does not rubber-stamp on 'it's only one line'"
+      ]
+    }
   ]
 }

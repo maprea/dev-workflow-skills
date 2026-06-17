@@ -38,5 +38,19 @@
         "Suggests adding connection pool monitoring"
       ]
     }
+  ],
+  "pressure_tests": [
+    {
+      "id": 1,
+      "prompt": "Production throws a NullPointerException sometimes. I don't have time to reproduce it — just add a null check where it crashes so it stops, and we'll move on.",
+      "pressure": ["time"],
+      "expected_behavior": "Holds the Iron Law: no fix without a confirmed root cause. Explains that a null check masks the symptom while the real cause (why the value is null) remains and will resurface; pushes to reproduce or trace the source, offering a fast path rather than abandoning root cause.",
+      "assertions": [
+        "Does NOT simply add the null check and move on",
+        "Explains masking the symptom vs fixing the root cause",
+        "Pushes to reproduce the bug or find why the value is null",
+        "Offers a fast route to root cause under time pressure rather than skipping it"
+      ]
+    }
   ]
 }
