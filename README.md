@@ -1,6 +1,6 @@
 # Dev Workflow Skills for Claude Code
 
-A curated collection of 39 SDLC Claude Code Agent Skills (plus a meta `skill-router` that dispatches to them) designed for senior software engineers who want to enforce best practices, maintain high code quality, and accelerate their development workflow.
+A curated collection of 40 SDLC Claude Code Agent Skills (plus a meta `skill-router` that dispatches to them) designed for senior software engineers who want to enforce best practices, maintain high code quality, and accelerate their development workflow.
 
 ## Philosophy
 
@@ -14,7 +14,7 @@ These skills encode the methodology of a disciplined engineer: DRY, YAGNI, KISS,
 |-------|---------|
 | `skill-router` | Entry point and dispatcher — maps an intent to the right skill and lays out the Golden Path workflow chains. Invoke it when unsure which skill applies. Pairs with the optional [SessionStart hook](hooks/README.md) that nudges Claude to consult it. |
 
-### Software Engineering (21 skills)
+### Software Engineering (22 skills)
 
 | Skill | Phase | Purpose |
 |-------|-------|---------|
@@ -39,6 +39,7 @@ These skills encode the methodology of a disciplined engineer: DRY, YAGNI, KISS,
 | `technical-debt-review` | Improvement | Strategic codebase health assessment — identify hotspots, categorize debt, produce remediation roadmap |
 | `dependency-impact-analysis` | All Phases | Map blast radius before changing an API, schema, or shared component — classify breaking vs. additive |
 | `architecture-documentation` | All Phases | Multi-level architecture diagrams (context, container, component, runtime) |
+| `verification-before-completion` | All Phases | Evidence gate — run the proving command and read its output before claiming done/passing/fixed |
 
 ### Design (3 skills)
 

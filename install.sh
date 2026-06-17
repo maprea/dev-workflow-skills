@@ -32,6 +32,7 @@ FREQUENT_SKILLS=(
   test-data-strategy
   test-suite-design
   ui-ux-design
+  verification-before-completion
 )
 
 usage() {

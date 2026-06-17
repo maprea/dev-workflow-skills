@@ -129,3 +129,4 @@ See [references/pre-deploy-gates.md](references/pre-deploy-gates.md) for environ
 - `rollback-strategy` — design the rollback plan before deploying (required for High-risk changes)
 - `configuration-strategy` — verify all environment variables and feature flags are configured correctly
 - `incident-response` — use if the deployment causes a production incident
+- `verification-before-completion` — the evidence gate behind every checked box

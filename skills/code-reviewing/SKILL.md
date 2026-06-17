@@ -84,3 +84,9 @@ These are the lenses through which code is examined:
 - Acknowledge good work: If something is well-written, say so
 - Propose, don't command: "What do you think about..." respects the author's judgment
 - Apply the Boy Scout Rule: note small cleanup opportunities near the changed code — a renamed variable, a dead import removed. These compound over time.
+
+## Cross-Skill References
+
+- `refactoring` — when the review surfaces code smells worth a structured cleanup
+- `security-audit` — for a dedicated, deep security pass beyond the review checklist
+- `verification-before-completion` — verify the change actually runs before approving, not from the diff alone

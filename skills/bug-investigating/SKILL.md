@@ -130,3 +130,4 @@ See [references/debugging-patterns.md](references/debugging-patterns.md) for hyp
 
 - `incident-response` — use instead when production is actively down and users are impacted (time-pressured response)
 - `tdd-workflow` — write the regression test (Step 6) using the TDD workflow
+- `verification-before-completion` — confirm the reproducing test passes before claiming the fix

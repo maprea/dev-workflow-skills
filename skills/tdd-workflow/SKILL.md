@@ -139,3 +139,9 @@ These are the excuses that lead to skipping the test. None of them hold up.
 - A new test passes the first time you run it (you never saw RED).
 - You can't explain why the test failed in the RED phase.
 - You're glancing at not-yet-deleted draft code while writing the "test-first" version.
+
+## Cross-Skill References
+
+- `test-suite-design` — adding tests to existing code (this skill is for new code, test-first)
+- `bug-investigating` — write a regression test for a found bug using this cycle
+- `verification-before-completion` — the GREEN step is this gate: watch the test pass for real
