@@ -12,6 +12,7 @@ on:
       - "skills/**"
       - "scripts/**"
       - "install.sh"
+      - "uninstall.sh"
       - "hooks/**"
       - "commands/**"
       - "plugins/**"

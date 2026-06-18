@@ -19,6 +19,13 @@ Usage:
                                          pinned-only) into the settings file's
                                          skillOverrides, preserving all other keys and
                                          any overrides for non-installed skills.
+  resolve.py prune <settings.local.json> [skill ...]
+                                         Remove the given skills from the settings
+                                         file's skillOverrides (used by uninstall to
+                                         clean up the machine-written baseline),
+                                         preserving every other key and any unmanaged
+                                         override. Drops skillOverrides entirely when
+                                         it becomes empty.
   resolve.py validate <skills_dir>       Integrity check: every referenced skill
                                          exists under <skills_dir>, and every
                                          non-meta skill belongs to >=1 role.
@@ -100,6 +107,24 @@ def cmd_overrides(data, args):
     print(json.dumps(nameonly_map(data, installed, role), indent=2, sort_keys=True))
 
 
+def load_settings(settings_path):
+    """Read a settings JSON file, tolerating missing / empty / malformed-as-empty."""
+    if os.path.isfile(settings_path):
+        try:
+            with open(settings_path, encoding="utf-8") as fh:
+                return json.load(fh) or {}
+        except (OSError, ValueError):
+            return {}
+    return {}
+
+
+def write_settings(settings_path, settings):
+    os.makedirs(os.path.dirname(os.path.abspath(settings_path)), exist_ok=True)
+    with open(settings_path, "w", encoding="utf-8") as fh:
+        json.dump(settings, fh, indent=2, sort_keys=True)
+        fh.write("\n")
+
+
 def cmd_apply(data, args):
     if len(args) < 2:
         die("apply requires <settings.local.json> <skills_dir> [role]")
@@ -116,15 +141,7 @@ def cmd_apply(data, args):
     )
     desired = nameonly_map(data, installed, role)  # {skill: "name-only"} for the tail
 
-    # Read existing settings (tolerate missing / empty / malformed-as-empty).
-    settings = {}
-    if os.path.isfile(settings_path):
-        try:
-            with open(settings_path, encoding="utf-8") as fh:
-                settings = json.load(fh) or {}
-        except (OSError, ValueError):
-            settings = {}
-
+    settings = load_settings(settings_path)
     existing = settings.get("skillOverrides", {})
     if not isinstance(existing, dict):
         existing = {}
@@ -134,13 +151,38 @@ def cmd_apply(data, args):
     merged.update(desired)
     settings["skillOverrides"] = merged
 
-    os.makedirs(os.path.dirname(os.path.abspath(settings_path)), exist_ok=True)
-    with open(settings_path, "w", encoding="utf-8") as fh:
-        json.dump(settings, fh, indent=2, sort_keys=True)
-        fh.write("\n")
+    write_settings(settings_path, settings)
     on_count = len(installed) - len(desired)
     print(f"applied: {len(desired)} name-only, {on_count} on "
           f"(role={role or 'baseline'}) -> {settings_path}")
+
+
+def cmd_prune(data, args):
+    if not args:
+        die("prune requires <settings.local.json> [skill ...]")
+    settings_path = args[0]
+    skills = set(args[1:])
+
+    settings = load_settings(settings_path)
+    if not os.path.isfile(settings_path):
+        print(f"pruned: 0 (no settings file at {settings_path})")
+        return
+
+    overrides = settings.get("skillOverrides")
+    if not isinstance(overrides, dict):
+        print(f"pruned: 0 (no skillOverrides) -> {settings_path}")
+        return
+
+    removed = [s for s in skills if s in overrides]
+    for s in removed:
+        del overrides[s]
+    if overrides:
+        settings["skillOverrides"] = overrides
+    else:
+        settings.pop("skillOverrides", None)  # drop the empty key entirely
+
+    write_settings(settings_path, settings)
+    print(f"pruned: {len(removed)} skillOverrides entries -> {settings_path}")
 
 
 def cmd_validate(data, args):
@@ -190,14 +232,22 @@ COMMANDS = {
     "label": cmd_label,
     "overrides": cmd_overrides,
     "apply": cmd_apply,
+    "prune": cmd_prune,
     "validate": cmd_validate,
 }
+
+
+# Commands that don't read roles.json — they work on a settings file alone, so they
+# must run even when resolve.py is installed away from roles.json (e.g. under hooks/).
+NO_ROLES_DATA = {"prune"}
 
 
 def main():
     if len(sys.argv) < 2 or sys.argv[1] not in COMMANDS:
         die(f"usage: resolve.py <{'|'.join(COMMANDS)}> [args]", code=2)
-    COMMANDS[sys.argv[1]](load(), sys.argv[2:])
+    cmd = sys.argv[1]
+    data = {} if cmd in NO_ROLES_DATA else load()
+    COMMANDS[cmd](data, sys.argv[2:])
 
 
 if __name__ == "__main__":

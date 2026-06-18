@@ -16,11 +16,15 @@ auto-trigger; the rest are invoked on demand). Scope to a role at runtime with t
 /role command, or install a hard subset with --role.
 
 Options:
-  -g, --global     Install to ~/.claude/ (default: ./.claude/)
+  -g, --global     Install to the user config dir: \$CLAUDE_CONFIG_DIR if set,
+                   else ~/.claude/ (default without this flag: ./.claude/)
   -d, --dir DIR    Install to a custom Claude config directory DIR
                    (mutually exclusive with --global)
   -r, --role ROLE  Install only one role's skills (a lean, hard subset; see
                    --list for roles). Without it, all skills are installed.
+  -p, --prune      After installing the selected set, remove previously-installed
+                   library skills that are NOT in the new selection (never touches
+                   your own custom skills). Use to narrow a prior all-skills install.
   -k, --hook       Also install the SessionStart hook that writes the activation
                    baseline (prints the settings snippet; never edits settings)
   -l, --list       List available skills and roles
@@ -34,6 +38,7 @@ Examples:
   $(basename "$0")                          # all skills + machinery -> ./.claude/
   $(basename "$0") --global --hook           # all skills + hook, globally
   $(basename "$0") --role pm                 # just the PM subset
+  $(basename "$0") --role pm --prune         # PM subset; drop other library skills
   $(basename "$0") --dir /etc/claude         # all skills to /etc/claude/
   $(basename "$0") feature-planning          # one skill, no machinery
 EOF
@@ -41,6 +46,7 @@ EOF
 
 GLOBAL=false
 HOOK=false
+PRUNE=false
 CONFIG_DIR=""
 ROLE=""
 SELECTED=()
@@ -59,6 +65,7 @@ while [[ $# -gt 0 ]]; do
       [[ $# -gt 0 ]] || { echo "Error: --role requires a role name" >&2; exit 1; }
       ROLE="$1"; shift ;;
     --role=*) ROLE="${1#*=}"; shift ;;
+    -p|--prune) PRUNE=true; shift ;;
     -k|--hook) HOOK=true; shift ;;
     -l|--list)
       echo "Available skills:"
@@ -89,7 +96,7 @@ if [[ -n "$CONFIG_DIR" ]]; then
   case "$CONFIG_DIR" in "~" | "~/"*) CONFIG_DIR="${HOME}${CONFIG_DIR#\~}" ;; esac
   CLAUDE_DIR="$CONFIG_DIR"
 elif $GLOBAL; then
-  CLAUDE_DIR="$HOME/.claude"
+  CLAUDE_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 else
   CLAUDE_DIR="$(pwd)/.claude"
 fi
@@ -113,9 +120,24 @@ for skill in "${SELECTED[@]}"; do
     errors=$((errors + 1))
     continue
   fi
+  # Clean copy: drop any prior version first so files removed upstream don't linger.
+  rm -rf "${DEST:?}/$skill"
   cp -r "$src" "$DEST/"
   echo "Installed: $skill -> $DEST/$skill"
 done
+
+# --prune: narrow a prior install to the current selection. Only ever removes skills
+# that exist in our source tree (so the user's own custom skills are never touched).
+if $PRUNE; then
+  declare -A keep=()
+  for s in "${SELECTED[@]}"; do keep["$s"]=1; done
+  for s in $(ls "$SKILLS_DIR"); do
+    if [[ -z "${keep[$s]:-}" && -d "$DEST/$s" ]]; then
+      rm -rf "${DEST:?}/$s"
+      echo "Pruned: $s (not in selection)"
+    fi
+  done
+fi
 
 # The role/orchestrator machinery is set up only when the orchestrator itself is
 # installed (it is, for the default-all and every role; not for ad-hoc single-skill
