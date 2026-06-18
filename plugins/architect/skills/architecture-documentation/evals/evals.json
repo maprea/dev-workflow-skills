@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Microservices architecture documentation from scratch",
+    "description": "Happy path: documenting a moderately complex distributed system for new hires",
+    "prompt": "We have a system with 8 microservices: a React frontend, a BFF API gateway, a user service, an order service, a payment service, a notification service, a search service, and a recommendation engine. We use PostgreSQL, Redis, RabbitMQ, and Elasticsearch. Everything runs on Kubernetes. We have no architecture diagrams and need to document this for new hires joining next month.",
+    "assertions": [
+      "Recommends starting with a system context diagram showing the system, users, and external dependencies",
+      "Identifies that all three abstraction levels are appropriate for this complexity",
+      "Prioritizes canonical and conceptual levels for the onboarding use case",
+      "Proposes a repository structure for organizing diagrams",
+      "Establishes or recommends a glossary with consistent naming for all 8 services",
+      "Suggests specific tooling appropriate for each level",
+      "Does not try to create all diagrams at once — suggests a phased approach",
+      "Produces at least a system context diagram as the first deliverable"
+    ]
+  },
+  {
+    "name": "Over-documentation for simple system",
+    "description": "Edge case: pushing back on unnecessary documentation complexity",
+    "prompt": "I have a simple CRUD application — Express.js backend, PostgreSQL database, deployed on a single EC2 instance behind nginx. My manager read about C4 and wants me to create all four C4 levels plus deployment diagrams plus data flow diagrams. Can you help me set this up?",
+    "assertions": [
+      "Pushes back on creating all four C4 levels for a simple monolith",
+      "Applies YAGNI — recommends only the diagrams that add value for this system's complexity",
+      "Recommends at most a system context and a single container diagram",
+      "Explains that Code-level C4 diagrams are almost never worth maintaining manually",
+      "Does not refuse the request entirely — provides a pragmatic subset",
+      "Suggests conceptual-level documentation may be sufficient for this system",
+      "Explains what would trigger the need for more detailed documentation in the future"
+    ]
+  },
+  {
+    "name": "Architecture decision vs architecture documentation",
+    "description": "Scope boundary: separating decision-making from documentation",
+    "prompt": "We're debating whether to extract our authentication logic into a separate service or keep it in the monolith. Can you also create architecture diagrams showing what the system would look like after the split?",
+    "assertions": [
+      "Recognizes the decision-making aspect and defers to the architecture-design skill for the ADR",
+      "Does not make the architectural decision within this skill's workflow",
+      "Offers to diagram the proposed architecture as a conceptual or draft diagram to support the decision",
+      "Clearly separates the decision process from the documentation process",
+      "If diagramming the proposed state, labels it as non-canonical since the decision hasn't been made yet",
+      "Suggests that canonical diagrams should only be updated after the decision is accepted"
+    ]
+  }
+]

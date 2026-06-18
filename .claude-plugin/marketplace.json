@@ -1,0 +1,111 @@
+{
+  "name": "dev-workflow",
+  "displayName": "Dev Workflow Skills",
+  "description": "Role-scoped SDLC workflow skills. Install the plugin(s) for your role.",
+  "version": "0.1.0",
+  "author": {
+    "name": "dev-workflow-skills"
+  },
+  "plugins": [
+    {
+      "name": "dev-workflow-backend",
+      "displayName": "Backend / Full-stack Engineer",
+      "description": "Skills for service, API, and data work: design, test-first implementation, performance, and shipping. (19 skills)",
+      "version": "0.1.0",
+      "source": {
+        "source": "directory",
+        "path": "./plugins/backend"
+      }
+    },
+    {
+      "name": "dev-workflow-frontend",
+      "displayName": "Frontend Engineer",
+      "description": "Skills for UI/UX, component architecture, accessibility, and client-side performance. (15 skills)",
+      "version": "0.1.0",
+      "source": {
+        "source": "directory",
+        "path": "./plugins/frontend"
+      }
+    },
+    {
+      "name": "dev-workflow-devops",
+      "displayName": "DevOps / SRE / Platform Engineer",
+      "description": "Skills for CI/CD, containers, infrastructure-as-code, delivery, observability, and incidents. (18 skills)",
+      "version": "0.1.0",
+      "source": {
+        "source": "directory",
+        "path": "./plugins/devops"
+      }
+    },
+    {
+      "name": "dev-workflow-ml",
+      "displayName": "ML Engineer / MLOps",
+      "description": "Skills for ML pipelines, experiment tracking, model deployment, and the data/observability around them. (13 skills)",
+      "version": "0.1.0",
+      "source": {
+        "source": "directory",
+        "path": "./plugins/ml"
+      }
+    },
+    {
+      "name": "dev-workflow-security",
+      "displayName": "Security Engineer",
+      "description": "Skills for security audits, dependency/CVE management, blast-radius analysis, and incident handling. (13 skills)",
+      "version": "0.1.0",
+      "source": {
+        "source": "directory",
+        "path": "./plugins/security"
+      }
+    },
+    {
+      "name": "dev-workflow-architect",
+      "displayName": "Architect / Staff Engineer",
+      "description": "Skills for structural decisions, documentation, contracts, blast radius, and technical-debt strategy. (15 skills)",
+      "version": "0.1.0",
+      "source": {
+        "source": "directory",
+        "path": "./plugins/architect"
+      }
+    },
+    {
+      "name": "dev-workflow-em",
+      "displayName": "Engineering Manager / Tech Lead",
+      "description": "Skills for planning, estimation, metrics, retros, proposals, and steering reviews and incidents. (10 skills)",
+      "version": "0.1.0",
+      "source": {
+        "source": "directory",
+        "path": "./plugins/em"
+      }
+    },
+    {
+      "name": "dev-workflow-pm",
+      "displayName": "Product / Project Manager",
+      "description": "Skills for proposals, PRDs/specs, estimation, OKRs/metrics, and retrospectives. (7 skills)",
+      "version": "0.1.0",
+      "source": {
+        "source": "directory",
+        "path": "./plugins/pm"
+      }
+    },
+    {
+      "name": "dev-workflow-qa",
+      "displayName": "QA / Test Engineer",
+      "description": "Skills for test-first development, coverage strategy, test data, review, and systematic debugging. (10 skills)",
+      "version": "0.1.0",
+      "source": {
+        "source": "directory",
+        "path": "./plugins/qa"
+      }
+    },
+    {
+      "name": "dev-workflow-designer",
+      "displayName": "Designer / UX",
+      "description": "Skills for user flows, accessibility, product requirements, and the frontend architecture that realizes them. (6 skills)",
+      "version": "0.1.0",
+      "source": {
+        "source": "directory",
+        "path": "./plugins/designer"
+      }
+    }
+  ]
+}

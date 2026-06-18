@@ -1,0 +1,215 @@
+{
+  "version": 1,
+  "skills": [
+    {
+      "name": "accessibility-design",
+      "description": "Design and implement accessible web/mobile apps to WCAG 2.1/2.2 — semantic HTML, ARIA patterns, keyboard navigation, focus management, color contrast, screen readers, accessible forms. Triggers: accessibility, a11y, WCAG, screen reader, keyboard navigation, ARIA, focus management, color contrast, alt text, semantic HTML, tab order, focus trap, skip link, announce. Build it in, don't bolt it on.",
+      "path": "accessibility-design/SKILL.md"
+    },
+    {
+      "name": "api-design",
+      "description": "Design RESTful and GraphQL APIs — endpoint naming, request/response contracts, error handling, pagination, versioning, auth patterns, OpenAPI specs. Triggers: design the API, API contract, REST API, GraphQL schema, error response format, pagination, API versioning, OpenAPI, swagger, endpoints. Use architecture-design for REST-vs-GraphQL or monolith-vs-microservices decisions.",
+      "path": "api-design/SKILL.md"
+    },
+    {
+      "name": "architecture-design",
+      "description": "Guide architectural and structural decisions using Architecture Decision Records (ADRs) — new services, pattern choices, database selection, component boundaries, state management, costly-to-reverse decisions. Triggers: how should I architect, which pattern, design decision, should I use X or Y, system design, ADR, component design, architectural trade-off.",
+      "path": "architecture-design/SKILL.md"
+    },
+    {
+      "name": "architecture-documentation",
+      "description": "Design and maintain architecture documentation with multi-level diagrams (C4) and docs-as-code. Triggers: architecture diagram, document the architecture, C4 diagram, system context, container diagram, component diagram, architecture docs, docs-as-code, PlantUML, Structurizr, D2, Mermaid architecture, infrastructure diagram, runtime flow. Use architecture-design for ADRs.",
+      "path": "architecture-documentation/SKILL.md"
+    },
+    {
+      "name": "bug-investigating",
+      "description": "Systematic debugging and root cause analysis using structured methodology — reproduce, isolate, hypothesize, verify. Triggers: this doesn't work, I'm getting an error, something is broken, bug, debug this, why is this happening, unexpected behavior, regression, root cause, stack trace, error message.",
+      "path": "bug-investigating/SKILL.md"
+    },
+    {
+      "name": "cicd-pipeline",
+      "description": "Design CI/CD pipelines for automated build, test, deploy — GitHub Actions, GitLab CI, quality gates. Triggers: CI/CD, pipeline, GitHub Actions, GitLab CI, workflow, automated deployment, build pipeline, continuous integration, continuous deployment, automate tests on PR, deploy automatically, quality gate.",
+      "path": "cicd-pipeline/SKILL.md"
+    },
+    {
+      "name": "code-reviewing",
+      "description": "Structured code reviews enforcing DRY, KISS, YAGNI, SRP, best practices, and project conventions. Triggers: review this code, code review, check my code, what do you think of this implementation, review this PR, is this code good, feedback on my code, review staged changes before commit.",
+      "path": "code-reviewing/SKILL.md"
+    },
+    {
+      "name": "configuration-strategy",
+      "description": "Design environment configuration, secrets management, and feature-flag hierarchy for a service or feature. Triggers: config strategy, environment variables, .env, secrets management, feature flag, config hierarchy, config precedence, twelve-factor config, environment-specific settings.",
+      "path": "configuration-strategy/SKILL.md"
+    },
+    {
+      "name": "containerization",
+      "description": "Write production-grade Dockerfiles, docker-compose, and Kubernetes manifests following security and reliability best practices. Triggers: Dockerfile, docker-compose, containerize, Docker image, Kubernetes, k8s manifest, container, pod, deployment yaml, multi-stage build, docker build, image size, container security.",
+      "path": "containerization/SKILL.md"
+    },
+    {
+      "name": "data-modeling",
+      "description": "Design database schemas, relationships, indexes, and migration strategies — relational and document stores. Triggers: data model, schema design, ER diagram, database schema, table design, foreign key, index strategy, normalization, denormalization, migration plan, document model, partition key.",
+      "path": "data-modeling/SKILL.md"
+    },
+    {
+      "name": "dependency-impact-analysis",
+      "description": "Map the blast radius of a change before implementing — find dependents, classify breaking vs additive, identify coordination needs, produce a propagation plan. Triggers: what will break if I change this, blast radius, impact analysis, breaking change, who depends on this, downstream impact, safe to rename, shared schema change, dependency graph.",
+      "path": "dependency-impact-analysis/SKILL.md"
+    },
+    {
+      "name": "dependency-management",
+      "description": "Evaluate, audit, and upgrade project dependencies — assess libraries before adoption, audit CVEs, plan major upgrades, resolve conflicts. Triggers: should I use this library, npm audit, upgrade dependencies, dependency vulnerability, outdated packages, evaluate this package, is this library maintained, dependency conflict, lock file, breaking changes in upgrade.",
+      "path": "dependency-management/SKILL.md"
+    },
+    {
+      "name": "deployment-checklist",
+      "description": "Pre-deploy verification and release safety checks — config, migrations, monitoring, rollback readiness, comms. Triggers: deployment checklist, ready to deploy, pre-deploy, release checklist, go-live, ship checklist, deploy safety, is this safe to ship, release readiness.",
+      "path": "deployment-checklist/SKILL.md"
+    },
+    {
+      "name": "deployment-repo",
+      "description": "Design a deployment (GitOps) repo that orchestrates multiple services in a polyrepo — version pinning, environment promotion, compatibility matrices, system config. Triggers: deployment repo, GitOps repo, polyrepo, multi-repo, version pinning, compatibility matrix, environment promotion, multi-service deployment, orchestration repo, which versions work together.",
+      "path": "deployment-repo/SKILL.md"
+    },
+    {
+      "name": "effort-estimation",
+      "description": "Estimate engineering effort with agile techniques — story points, t-shirt sizing, three-point estimation, capacity planning. Triggers: estimate this, how long will this take, story points, t-shirt sizing, effort estimation, capacity planning, sprint planning, budget estimate, forecast, velocity, when will this be done.",
+      "path": "effort-estimation/SKILL.md"
+    },
+    {
+      "name": "feature-planning",
+      "description": "Break features into well-scoped tasks with acceptance criteria, risk assessment, and dependency mapping. Triggers: plan this, break this down, scope this feature, create tasks for, sprint planning, how should I implement this feature, user stories, acceptance criteria, dependency mapping, feature breakdown.",
+      "path": "feature-planning/SKILL.md"
+    },
+    {
+      "name": "frontend-architecture",
+      "description": "Design frontend architecture — React component hierarchy, state management, design tokens, data fetching, routing, error boundaries, code organization. Triggers: component architecture, state management, design system, design tokens, component library, React structure, folder structure, Zustand vs Redux, React Query, code splitting, error boundary, compound component.",
+      "path": "frontend-architecture/SKILL.md"
+    },
+    {
+      "name": "git-workflow",
+      "description": "Write commit messages, PR descriptions, and manage branching strategy following conventional commits. Triggers: write a commit message, commit this, PR description, pull request, branching strategy, git workflow, squash commits, rebase, conventional commits, how should I commit this, review staged changes.",
+      "path": "git-workflow/SKILL.md"
+    },
+    {
+      "name": "gitops-delivery",
+      "description": "Design GitOps continuous delivery with ArgoCD or Flux — declarative reconciliation, cross-repo CI/CD triggers, drift detection, progressive delivery. Triggers: ArgoCD, Flux, FluxCD, GitOps, git-based deployment, declarative delivery, auto-sync, drift detection, cross-repo trigger, reconciliation loop, pull-based deployment, canary GitOps.",
+      "path": "gitops-delivery/SKILL.md"
+    },
+    {
+      "name": "incident-response",
+      "description": "Structured production incident workflow — triage, mitigation, investigation, recovery, comms. Triggers: production is down, site is down, incident, outage, users seeing errors, on-call, alert fired, p0, p1, sev1, sev2, broken in prod, rollback, emergency deploy. For active incidents under time pressure.",
+      "path": "incident-response/SKILL.md"
+    },
+    {
+      "name": "infrastructure-as-code",
+      "description": "Write and review IaC with Terraform, CloudFormation, Pulumi, or CDK — modularity, security, state management. Triggers: Terraform, CloudFormation, Pulumi, infrastructure as code, IaC, provision, cloud resources, terraform module, state management, terraform plan, CDK, drift, remote state.",
+      "path": "infrastructure-as-code/SKILL.md"
+    },
+    {
+      "name": "metrics-and-okrs",
+      "description": "Define OKRs, KPIs, success metrics, and engineering health metrics (DORA). Triggers: OKR, KPI, metrics, success metrics, key results, objectives, measure success, DORA metrics, engineering metrics, velocity, cycle time, deployment frequency, how do we measure, what should we track.",
+      "path": "metrics-and-okrs/SKILL.md"
+    },
+    {
+      "name": "ml-experiment-tracking",
+      "description": "Design reproducible ML experiments — tracking, versioning, run comparison with MLflow, W&B, or DVC. Triggers: experiment tracking, MLflow, wandb, weights and biases, DVC, track experiments, compare models, hyperparameter, reproducibility, model registry, which model is better, experiment results, log metrics.",
+      "path": "ml-experiment-tracking/SKILL.md"
+    },
+    {
+      "name": "ml-model-deployment",
+      "description": "Deploy ML models to production — serving infrastructure, monitoring, drift detection, safe rollouts. Triggers: deploy model, serve model, model API, model monitoring, data drift, concept drift, model degradation, A/B test model, canary model, inference endpoint, prediction API, retrain trigger.",
+      "path": "ml-model-deployment/SKILL.md"
+    },
+    {
+      "name": "ml-pipeline-design",
+      "description": "Design reproducible ML training and data pipelines — ingestion, validation, feature engineering, training, evaluation, continuous training orchestration. Triggers: training pipeline, data pipeline, feature engineering, ETL for ML, continuous training, data validation, feature store, preprocessing, notebook to pipeline, orchestrate training, Airflow, Kubeflow, pipeline DAG.",
+      "path": "ml-pipeline-design/SKILL.md"
+    },
+    {
+      "name": "observability-design",
+      "description": "Design production observability — SLIs, SLOs, SLAs, error budgets, OpenTelemetry traces/metrics/logs, structured logging, alerting, dashboards. Triggers: SLO, SLI, SLA, error budget, observability, monitoring, OpenTelemetry, OTel, tracing, distributed tracing, structured logging, alerting, dashboard, metrics, correlation ID, alert fatigue.",
+      "path": "observability-design/SKILL.md"
+    },
+    {
+      "name": "performance-optimization",
+      "description": "Identify and resolve performance bottlenecks via static analysis — N+1 queries, algorithmic complexity, query optimization, caching, memory leaks, bundle size, connection management. Triggers: this is slow, optimize, performance, N+1, query optimization, caching, bundle size, memory leak, latency, response time, scale, bottleneck.",
+      "path": "performance-optimization/SKILL.md"
+    },
+    {
+      "name": "prd-writing",
+      "description": "Write lightweight agile PRDs and technical RFCs that align stakeholders before implementation. Triggers: PRD, product requirements, RFC, request for comments, technical design doc, design document, tech spec, write requirements, what are we building, spec this out. Produces the WHAT and WHY — feature-planning handles HOW.",
+      "path": "prd-writing/SKILL.md"
+    },
+    {
+      "name": "project-documentation",
+      "description": "Write and maintain project docs — README, contributing guides, API docs, changelogs, inline docs. Triggers: write a README, document this project, create documentation, contributing guide, changelog, API docs, how do I document, this needs docs, onboarding docs, JSDoc, docstrings.",
+      "path": "project-documentation/SKILL.md"
+    },
+    {
+      "name": "project-proposal",
+      "description": "Write lightweight project proposals for budget approval and go/no-go decisions — problem, business case, scope, rough estimates, risks, success criteria. Triggers: project proposal, project brief, business case, budget estimate, should we build this, go/no-go, risk assessment, cost-benefit, ROI, justify this project, stakeholder approval.",
+      "path": "project-proposal/SKILL.md"
+    },
+    {
+      "name": "refactoring",
+      "description": "Systematic code improvement via design principles, smell detection, and safe transformation patterns. Triggers: refactor this, clean this up, simplify this code, reduce complexity, extract this, this code is messy, tech debt, improve this code, code smell, rename, extract function, dead code.",
+      "path": "refactoring/SKILL.md"
+    },
+    {
+      "name": "retrospective",
+      "description": "Facilitate sprint retros, project post-mortems, and incident post-mortems with actionable, owned improvements. Triggers: retrospective, retro, post-mortem, postmortem, lessons learned, what went wrong, what went well, incident review, blameless, action items, sprint review, after action review.",
+      "path": "retrospective/SKILL.md"
+    },
+    {
+      "name": "rollback-strategy",
+      "description": "Design safe rollback plans before deploying — identify irreversible changes, classify rollback complexity, create tested undo procedures. Triggers: rollback plan, rollback strategy, how do I undo this, can we revert, what if the deploy fails, safe to deploy, feature flag rollout, blue-green, database migration rollback, irreversible change.",
+      "path": "rollback-strategy/SKILL.md"
+    },
+    {
+      "name": "security-audit",
+      "description": "Comprehensive security analysis — OWASP Top 10, auth/authz flows, injection vulnerabilities, data exposure, secrets detection, dependency CVEs, hardening recommendations. Triggers: security audit, vulnerability, is this secure, security review, pentest prep, OWASP, harden this, check for vulnerabilities, injection, XSS, CSRF, auth security.",
+      "path": "security-audit/SKILL.md"
+    },
+    {
+      "name": "skill-router",
+      "description": "Orchestrator and entry point for the dev-workflow skills library. Use when starting substantial software work or unsure which skill fits — planning, architecture, design, implementation, testing, debugging, review, refactoring, security, deployment, incidents, or PM docs. Reads the skill catalog, routes intent to the right skill, and invokes it by name (most skills are loaded name-only and do not auto-trigger). Shows the Golden Path workflow chains.",
+      "path": "skill-router/SKILL.md"
+    },
+    {
+      "name": "tdd-workflow",
+      "description": "Guide test-driven development with red-green-refactor. Triggers: use tdd, test first, write the tests, red green refactor, test-driven, what should I test, write tests before code, failing test, implement using TDD. For NEW code via test-first — use test-suite-design for adding tests to existing code.",
+      "path": "tdd-workflow/SKILL.md"
+    },
+    {
+      "name": "technical-debt-review",
+      "description": "Strategic codebase health assessment — identify hotspots, categorize debt, produce remediation roadmap. Triggers: technical debt, tech debt, debt review, codebase health, hotspots, debt assessment, remediation plan, what should we fix first, debt roadmap, code rot, legacy code audit.",
+      "path": "technical-debt-review/SKILL.md"
+    },
+    {
+      "name": "test-data-strategy",
+      "description": "Design and generate test data — factories, synthetic data, property-based testing, boundary analysis, contract testing, load scenarios, GDPR-safe data. Triggers: test data, synthetic data, fake data, factory, seed data, fixtures, property-based testing, fuzz testing, boundary values, contract testing, Pact, load test data, anonymize, GDPR test data.",
+      "path": "test-data-strategy/SKILL.md"
+    },
+    {
+      "name": "test-suite-design",
+      "description": "Design comprehensive test suites for existing code — strategy across unit/integration/e2e, fixtures, factories, helpers. Triggers: add tests, write tests for, increase coverage, test this module, testing strategy, test plan, what tests do I need, test infrastructure, test helpers, this has no tests. Not for TDD — use tdd-workflow.",
+      "path": "test-suite-design/SKILL.md"
+    },
+    {
+      "name": "ui-ux-design",
+      "description": "Design user experiences from an engineer's perspective — user flows, wireframes, interaction patterns, responsive strategy, navigation, loading/error/empty states. Triggers: design the UI, user flow, wireframe, how should this screen look, loading state, error state, empty state, responsive design, navigation, page layout, form design, mockup.",
+      "path": "ui-ux-design/SKILL.md"
+    },
+    {
+      "name": "verification-before-completion",
+      "description": "Evidence gate before claiming work is done, passing, fixed, or deployed. Use before saying 'done', 'it works', or 'tests pass', or before committing, pushing, or opening a PR. Triggers: is it done, did it work, tests pass, verify, ready to commit, before I push, confirm the fix. Run the proving command fresh and read its output first.",
+      "path": "verification-before-completion/SKILL.md"
+    },
+    {
+      "name": "writing-skills",
+      "description": "Use when authoring, editing, or reviewing a skill in this library — a new SKILL.md, one that under-triggers, or hardening an existing one. Covers description and listing-budget rules, frontmatter, progressive disclosure, the 3-eval rule, and pressure-testing against rationalizations. Triggers: write a skill, new skill, edit a skill, skill isn't triggering.",
+      "path": "writing-skills/SKILL.md"
+    }
+  ]
+}

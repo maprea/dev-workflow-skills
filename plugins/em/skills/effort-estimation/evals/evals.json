@@ -1,0 +1,32 @@
+{
+  "skill_name": "effort-estimation",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "My PM asked me 'how long will it take to build a notification system?' I have a feature plan with 8 tasks. Help me estimate and communicate this to the PM.",
+      "expected_output": "Should walk through estimating each task, choose appropriate method, calculate total with buffer, and produce stakeholder-friendly communication with ranges.",
+      "assertions": [
+        "Chooses an appropriate estimation method for the context",
+        "Estimates each task individually, not the project as a single unit",
+        "Produces a range, not a single number",
+        "Includes buffer for unknowns (20-30%)",
+        "Communicates in stakeholder-friendly language (weeks, not story points)",
+        "States assumptions explicitly",
+        "Does NOT promise a specific date without qualifying it"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our VP wants a budget estimate for a 6-month data platform rebuild. We're in early discovery and a lot is still unknown. How do I estimate this responsibly?",
+      "expected_output": "Should recommend three-point estimation for high-uncertainty work, produce wide ranges, clearly state assumptions and unknowns, and suggest narrowing the estimate through phased discovery.",
+      "assertions": [
+        "Recommends three-point estimation due to high uncertainty",
+        "Produces wide initial ranges (appropriate for early discovery)",
+        "Suggests a phased approach: estimate phase 1 tightly, phases 2-3 loosely",
+        "Clearly states which assumptions drive the estimate",
+        "Recommends a technical spike before committing to precise numbers",
+        "Does NOT produce a precise single-number estimate for 6 months of unknown work"
+      ]
+    }
+  ]
+}

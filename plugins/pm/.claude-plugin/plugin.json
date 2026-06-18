@@ -1,0 +1,14 @@
+{
+  "name": "dev-workflow-pm",
+  "displayName": "Product / Project Manager",
+  "description": "Skills for proposals, PRDs/specs, estimation, OKRs/metrics, and retrospectives.",
+  "version": "0.1.0",
+  "author": {
+    "name": "dev-workflow-skills"
+  },
+  "keywords": [
+    "skills",
+    "sdlc",
+    "pm"
+  ]
+}

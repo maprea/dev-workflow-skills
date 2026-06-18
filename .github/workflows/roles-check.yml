@@ -1,0 +1,38 @@
+name: roles-check
+
+# Offline integrity gate for role-based, window-aware activation. Runs on PRs
+# that touch the SSOT, the generators, the installer, the hooks, or the
+# generated marketplace. No API key required.
+
+on:
+  pull_request:
+    paths:
+      - "roles.json"
+      - "catalog.json"
+      - "skills/**"
+      - "scripts/**"
+      - "install.sh"
+      - "hooks/**"
+      - "commands/**"
+      - "plugins/**"
+      - ".claude-plugin/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Marketplace tree is committed and up to date
+        run: node scripts/build-plugins.mjs --check
+      - name: Integrity + behavior checks
+        run: bash scripts/verify.sh

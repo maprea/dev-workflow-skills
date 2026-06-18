@@ -1,0 +1,34 @@
+{
+  "skill_name": "frontend-architecture",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm starting a new React app (Next.js) for a project management tool. It has projects, tasks, team members, and a dashboard. Users can filter, sort, and search tasks. There's real-time collaboration. Help me design the frontend architecture.",
+      "expected_output": "Should design component hierarchy, choose state management strategy (server state vs client state), define data fetching patterns, propose folder structure, and address real-time needs.",
+      "assertions": [
+        "Decomposes UI into page, feature, UI, and layout component categories",
+        "Separates server state (TanStack Query) from client state (useState/Zustand)",
+        "Addresses real-time data with WebSocket + cache invalidation strategy",
+        "Proposes feature-based folder structure (not type-based)",
+        "Defines design tokens for visual consistency",
+        "Addresses code splitting at route level",
+        "Error boundary strategy at feature boundaries",
+        "URL state for filters, sort, and search (shareable links)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our React app has grown to 200+ components and state management is a mess — we have Redux, Context, local state, and even some global variables. Some components re-render 50+ times when you type in a search box. How do we untangle this?",
+      "expected_output": "Should diagnose the root causes (mixed state paradigms, no separation of server vs client state, over-connected Redux), and propose an incremental migration strategy.",
+      "assertions": [
+        "Diagnoses the re-render problem as likely unnecessary Redux subscriptions",
+        "Recommends migrating server data OUT of Redux into TanStack Query / SWR",
+        "Recommends keeping Redux only for genuinely global client state",
+        "Suggests an incremental migration (one feature at a time, not big-bang)",
+        "Applies the state placement ladder (useState first, then up)",
+        "Does NOT recommend adding yet another state management library on top",
+        "Addresses the performance issue specifically (memoization, selector optimization)"
+      ]
+    }
+  ]
+}

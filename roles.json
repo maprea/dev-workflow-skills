@@ -1,0 +1,179 @@
+{
+  "version": 1,
+  "_comment": "Single source of truth for role-based, window-aware skill activation. Consumed by install.sh (via scripts/resolve.py), scripts/build-plugins.mjs, and skill-router. A role's working set = its core set UNION its skills. 'pinned' skills stay auto-triggerable (skillOverrides: on) regardless of role/window when installed; everything else is gated: on with a 1m window OR when in the active role, else name-only. See ROLES.md.",
+
+  "pinned": [
+    "skill-router",
+    "tdd-workflow",
+    "verification-before-completion",
+    "bug-investigating",
+    "incident-response",
+    "code-reviewing"
+  ],
+
+  "core": {
+    "universal": [
+      "skill-router",
+      "feature-planning"
+    ],
+    "technical": [
+      "skill-router",
+      "feature-planning",
+      "git-workflow",
+      "code-reviewing",
+      "verification-before-completion",
+      "bug-investigating",
+      "project-documentation"
+    ]
+  },
+
+  "meta_only": [
+    "writing-skills"
+  ],
+
+  "roles": {
+    "backend": {
+      "label": "Backend / Full-stack Engineer",
+      "description": "Skills for service, API, and data work: design, test-first implementation, performance, and shipping.",
+      "core": "technical",
+      "skills": [
+        "api-design",
+        "data-modeling",
+        "architecture-design",
+        "tdd-workflow",
+        "test-suite-design",
+        "test-data-strategy",
+        "performance-optimization",
+        "dependency-management",
+        "configuration-strategy",
+        "security-audit",
+        "refactoring",
+        "deployment-checklist"
+      ]
+    },
+    "frontend": {
+      "label": "Frontend Engineer",
+      "description": "Skills for UI/UX, component architecture, accessibility, and client-side performance.",
+      "core": "technical",
+      "skills": [
+        "ui-ux-design",
+        "frontend-architecture",
+        "accessibility-design",
+        "api-design",
+        "tdd-workflow",
+        "test-suite-design",
+        "performance-optimization",
+        "refactoring"
+      ]
+    },
+    "devops": {
+      "label": "DevOps / SRE / Platform Engineer",
+      "description": "Skills for CI/CD, containers, infrastructure-as-code, delivery, observability, and incidents.",
+      "core": "technical",
+      "skills": [
+        "containerization",
+        "cicd-pipeline",
+        "infrastructure-as-code",
+        "deployment-repo",
+        "gitops-delivery",
+        "deployment-checklist",
+        "rollback-strategy",
+        "incident-response",
+        "observability-design",
+        "configuration-strategy",
+        "dependency-impact-analysis"
+      ]
+    },
+    "ml": {
+      "label": "ML Engineer / MLOps",
+      "description": "Skills for ML pipelines, experiment tracking, model deployment, and the data/observability around them.",
+      "core": "technical",
+      "skills": [
+        "ml-pipeline-design",
+        "ml-experiment-tracking",
+        "ml-model-deployment",
+        "data-modeling",
+        "test-data-strategy",
+        "observability-design"
+      ]
+    },
+    "security": {
+      "label": "Security Engineer",
+      "description": "Skills for security audits, dependency/CVE management, blast-radius analysis, and incident handling.",
+      "core": "technical",
+      "skills": [
+        "security-audit",
+        "dependency-management",
+        "dependency-impact-analysis",
+        "incident-response",
+        "rollback-strategy",
+        "configuration-strategy"
+      ]
+    },
+    "architect": {
+      "label": "Architect / Staff Engineer",
+      "description": "Skills for structural decisions, documentation, contracts, blast radius, and technical-debt strategy.",
+      "core": "technical",
+      "skills": [
+        "architecture-design",
+        "architecture-documentation",
+        "api-design",
+        "data-modeling",
+        "dependency-impact-analysis",
+        "technical-debt-review",
+        "configuration-strategy",
+        "performance-optimization"
+      ]
+    },
+    "em": {
+      "label": "Engineering Manager / Tech Lead",
+      "description": "Skills for planning, estimation, metrics, retros, proposals, and steering reviews and incidents.",
+      "core": "universal",
+      "skills": [
+        "technical-debt-review",
+        "retrospective",
+        "metrics-and-okrs",
+        "effort-estimation",
+        "project-proposal",
+        "prd-writing",
+        "code-reviewing",
+        "incident-response"
+      ]
+    },
+    "pm": {
+      "label": "Product / Project Manager",
+      "description": "Skills for proposals, PRDs/specs, estimation, OKRs/metrics, and retrospectives.",
+      "core": "universal",
+      "skills": [
+        "project-proposal",
+        "prd-writing",
+        "effort-estimation",
+        "metrics-and-okrs",
+        "retrospective"
+      ]
+    },
+    "qa": {
+      "label": "QA / Test Engineer",
+      "description": "Skills for test-first development, coverage strategy, test data, review, and systematic debugging.",
+      "core": "technical",
+      "skills": [
+        "tdd-workflow",
+        "test-suite-design",
+        "test-data-strategy",
+        "code-reviewing",
+        "bug-investigating"
+      ]
+    },
+    "designer": {
+      "label": "Designer / UX",
+      "description": "Skills for user flows, accessibility, product requirements, and the frontend architecture that realizes them.",
+      "core": "universal",
+      "skills": [
+        "ui-ux-design",
+        "accessibility-design",
+        "prd-writing",
+        "frontend-architecture"
+      ]
+    }
+  }
+}

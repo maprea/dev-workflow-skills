@@ -1,0 +1,48 @@
+{
+  "skill_name": "dependency-management",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm building a Node.js API and need a validation library. I'm considering zod, joi, yup, and ajv. Which should I use? Our stack is TypeScript, Express, and Prisma.",
+      "expected_output": "Should evaluate all four libraries across the standard dimensions (maintenance, TS support, bundle size, API quality) and make a clear recommendation based on the TypeScript stack.",
+      "assertions": [
+        "Evaluates all four options, not just recommends one without comparison",
+        "Considers TypeScript integration as a key differentiator",
+        "Notes zod's TypeScript-native schema-to-type inference as a strong fit",
+        "Compares bundle sizes",
+        "Compares API ergonomics with brief examples",
+        "Makes a clear recommendation with primary reason",
+        "Does not dismiss alternatives without explanation"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "npm audit shows 47 vulnerabilities: 3 critical, 8 high, 15 moderate, 21 low. I don't know where to start. Help me triage this.",
+      "expected_output": "Should guide triage by severity, distinguish direct vs transitive dependencies, check if vulnerable code paths are actually used, and produce an action plan.",
+      "assertions": [
+        "Starts with critical vulnerabilities, not the full list",
+        "Distinguishes between direct and transitive dependencies",
+        "Asks about or checks whether vulnerable code paths are actually exercised",
+        "Suggests npm audit fix --force ONLY with caution (can introduce breaking changes)",
+        "Recommends overrides/resolutions for transitive deps when parent hasn't updated",
+        "Identifies that many moderate/low findings may be acceptable risk",
+        "Produces a prioritized action plan, not just 'fix everything'"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We need to upgrade React from v17 to v19. We have a large codebase with 200+ components. Some use class components and legacy context API. How should we approach this?",
+      "expected_output": "Should recommend a phased approach (17→18→19), identify the major breaking changes at each step, suggest using the feature-planning skill to break this into tasks, and warn about class component and legacy API issues.",
+      "assertions": [
+        "Recommends incremental upgrade (17→18 first, then 18→19), not direct 17→19",
+        "Identifies class components and legacy context as migration blockers",
+        "Lists the key breaking changes at each major version boundary",
+        "Suggests codemods for automated migration where available",
+        "Recommends comprehensive test coverage before starting",
+        "Suggests feature-planning skill to break into manageable tasks",
+        "Warns about the scope and risk — this is not a one-afternoon task",
+        "Recommends testing in isolation before merging to main"
+      ]
+    }
+  ]
+}

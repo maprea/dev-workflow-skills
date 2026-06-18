@@ -1,0 +1,58 @@
+{
+  "skill_name": "tdd-workflow",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to implement a password strength validator in Python. Requirements: minimum 8 characters, at least one uppercase, one lowercase, one digit, and one special character. Let's do this TDD style.",
+      "expected_output": "Should create a test list first, then implement one test at a time following red-green-refactor. Should NOT write all tests at once or write the implementation first.",
+      "assertions": [
+        "Creates a test list before writing any test",
+        "Starts with the simplest test case (e.g., rejects empty string or too-short password)",
+        "Writes exactly one failing test at a time",
+        "Writes minimum code to pass each test",
+        "Refactors after each green phase",
+        "Test names describe behavior, not implementation",
+        "Follows Arrange-Act-Assert pattern"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I want to add a shopping cart feature to my Express.js app. A user can add items, remove items, and calculate the total with discounts. Use TDD to build this. I use Jest for testing.",
+      "expected_output": "Should discuss inside-out vs outside-in approach, create a test list ordered by complexity, and implement iteratively.",
+      "assertions": [
+        "Discusses TDD approach (inside-out for domain logic)",
+        "Creates an ordered test list from simple to complex",
+        "Happy path tests come before error cases",
+        "Discount logic tests come after basic cart operations",
+        "Does not write implementation before tests",
+        "Uses Jest syntax correctly"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I have a function that calls an external payment API. How should I TDD this? I'm worried about testing external calls.",
+      "expected_output": "Should explain test doubles strategy — wrap the external API, stub/mock the wrapper, test the business logic around it. Should distinguish between unit and integration testing here.",
+      "assertions": [
+        "Recommends wrapping the external API (don't mock what you don't own)",
+        "Explains stub vs mock distinction for this case",
+        "Suggests unit tests with stubs for business logic",
+        "Suggests integration test for actual API communication",
+        "Does not suggest mocking the HTTP library directly"
+      ]
+    }
+  ],
+  "pressure_tests": [
+    {
+      "id": 1,
+      "prompt": "We demo in 30 minutes and I already wrote the whole discount_calculator function — it worked when I tried it by hand. Just add a couple of tests after so we're covered, then we ship.",
+      "pressure": ["time", "sunk_cost"],
+      "expected_behavior": "Holds the Iron Law. Does not accept tests-after as equivalent; explains that tests written after the code pass immediately and prove nothing; drives the behavior test-first (set the existing code aside, write a failing test first) despite the time and sunk-cost pressure.",
+      "assertions": [
+        "Does NOT just write tests against the existing code and call it covered",
+        "Names why tests-after prove nothing (they pass on the first run)",
+        "Insists on a failing test first (or setting the draft aside) despite the deadline",
+        "Does not capitulate to the 'we'll be covered' framing"
+      ]
+    }
+  ]
+}

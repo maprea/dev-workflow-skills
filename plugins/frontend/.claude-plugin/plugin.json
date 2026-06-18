@@ -1,0 +1,14 @@
+{
+  "name": "dev-workflow-frontend",
+  "displayName": "Frontend Engineer",
+  "description": "Skills for UI/UX, component architecture, accessibility, and client-side performance.",
+  "version": "0.1.0",
+  "author": {
+    "name": "dev-workflow-skills"
+  },
+  "keywords": [
+    "skills",
+    "sdlc",
+    "frontend"
+  ]
+}

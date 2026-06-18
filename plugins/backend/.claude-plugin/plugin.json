@@ -1,0 +1,14 @@
+{
+  "name": "dev-workflow-backend",
+  "displayName": "Backend / Full-stack Engineer",
+  "description": "Skills for service, API, and data work: design, test-first implementation, performance, and shipping.",
+  "version": "0.1.0",
+  "author": {
+    "name": "dev-workflow-skills"
+  },
+  "keywords": [
+    "skills",
+    "sdlc",
+    "backend"
+  ]
+}

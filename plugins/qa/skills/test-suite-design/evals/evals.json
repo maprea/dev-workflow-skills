@@ -1,0 +1,50 @@
+{
+  "skill_name": "test-suite-design",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I have a UserService class in TypeScript with methods for createUser, updateUser, deleteUser, and getUserById. It talks to a PostgreSQL database through Prisma and sends welcome emails via SendGrid. There are zero tests. Help me add a comprehensive test suite.",
+      "expected_output": "Should assess the current state, map behaviors for each method, separate unit vs integration concerns, recommend mocking strategy for Prisma and SendGrid, and write structured tests grouped by behavior.",
+      "assertions": [
+        "Asks about or checks existing test infrastructure before writing tests",
+        "Maps behaviors for each method (not just happy paths)",
+        "Separates unit tests (business logic) from integration tests (database queries)",
+        "Recommends mocking Prisma client for unit tests",
+        "Recommends wrapping SendGrid and mocking the wrapper",
+        "Groups tests by behavior (describe blocks), not by method only",
+        "Includes error path tests (user not found, duplicate email, email send failure)",
+        "Does NOT use TDD red-green-refactor cycle — writes tests for existing code"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our Django project has 0% test coverage and we need to get to a reasonable level before a big refactor. We have about 30 models, 50 views, and 20 utility functions. Where do I even start?",
+      "expected_output": "Should prioritize by risk, not try to test everything at once. Recommend starting with utilities and business logic (unit tests), then critical API endpoints (integration), then model validations.",
+      "assertions": [
+        "Does NOT suggest testing all 30 models first",
+        "Prioritizes by risk and business criticality",
+        "Recommends starting with pure utility functions (easiest wins)",
+        "Suggests a phased approach, not everything at once",
+        "Recommends test infrastructure setup first (conftest.py, factories)",
+        "References the testing pyramid (70/20/10 ratio)",
+        "Mentions that this coverage enables the refactoring skill to work safely"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Write tests for this function:\n\nfunction calculateShippingCost(order) {\n  if (!order.items || order.items.length === 0) return 0;\n  const weight = order.items.reduce((sum, item) => sum + item.weight * item.quantity, 0);\n  if (order.destination === 'domestic') {\n    if (weight < 1) return 5.99;\n    if (weight < 5) return 9.99;\n    return 14.99 + Math.ceil((weight - 5) / 5) * 4.99;\n  }\n  if (order.destination === 'international') {\n    return weight * 12.99;\n  }\n  throw new Error(`Unknown destination: ${order.destination}`);\n}",
+      "expected_output": "Should create a comprehensive behavior map first, then write tests covering all branches including edge cases and error paths. Should use descriptive test names and group by scenario.",
+      "assertions": [
+        "Creates a behavior map before writing tests",
+        "Tests empty items array returns 0",
+        "Tests domestic weight boundaries (< 1, < 5, >= 5)",
+        "Tests the incremental pricing formula for heavy domestic orders",
+        "Tests international linear pricing",
+        "Tests the error case for unknown destination",
+        "Tests with null/undefined items",
+        "Uses descriptive test names that read as specifications",
+        "Does NOT just write one test per if-branch — tests boundary values"
+      ]
+    }
+  ]
+}

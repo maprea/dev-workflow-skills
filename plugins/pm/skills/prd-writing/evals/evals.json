@@ -1,0 +1,33 @@
+{
+  "skill_name": "prd-writing",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Write a PRD for adding multi-language support (i18n) to our React web app. We currently only support English. Our analytics show 30% of users have non-English browser locales. We want to support Spanish, French, and Portuguese initially.",
+      "expected_output": "Should produce a lightweight agile PRD with clear problem statement backed by data, user stories prioritized by MoSCoW, non-goals (e.g., not RTL languages yet), and success metrics.",
+      "assertions": [
+        "Problem statement includes the 30% data point as justification",
+        "Goals are measurable (e.g., support 3 languages, reduce bounce rate for non-English users)",
+        "Non-goals explicitly state what's deferred (RTL, CJK, machine translation)",
+        "User stories cover content translation, language switching, locale detection",
+        "MoSCoW prioritization distinguishes must-have from nice-to-have",
+        "Constraints mention things like URL strategy, SEO, content workflow",
+        "Keeps the PRD concise (not a 10-page waterfall spec)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Write a technical RFC for migrating our user authentication from session-based to JWT tokens. We have 200K active users and can't afford downtime during migration.",
+      "expected_output": "Should produce an RFC with the zero-downtime constraint front and center, propose a gradual migration strategy, present alternatives, and identify specific risks.",
+      "assertions": [
+        "Zero-downtime requirement shapes the entire proposal (not just a footnote)",
+        "Proposes a gradual migration (dual-auth period, not big bang)",
+        "Presents alternatives (session-based improvements, OAuth provider, etc.)",
+        "Addresses security implications of JWT (token revocation, expiry strategy)",
+        "Includes data migration plan for existing sessions",
+        "Has open questions that invite reviewer input",
+        "Links to feature-planning for implementation task breakdown"
+      ]
+    }
+  ]
+}
