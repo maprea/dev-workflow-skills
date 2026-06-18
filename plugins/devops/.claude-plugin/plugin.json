@@ -1,0 +1,14 @@
+{
+  "name": "dev-workflow-devops",
+  "displayName": "DevOps / SRE / Platform Engineer",
+  "description": "Skills for CI/CD, containers, infrastructure-as-code, delivery, observability, and incidents.",
+  "version": "0.1.0",
+  "author": {
+    "name": "dev-workflow-skills"
+  },
+  "keywords": [
+    "skills",
+    "sdlc",
+    "devops"
+  ]
+}

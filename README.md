@@ -101,27 +101,56 @@ cp -r skills/* ~/.claude/skills/
 
 ### Using the installer
 
-`install.sh` installs the frequent-skills subset (including `skill-router`) by default:
+`install.sh` installs **all** skills plus the orchestrator machinery by default:
 
 ```bash
-./install.sh                    # frequent skills -> ./.claude/skills/
-./install.sh --all --global     # all skills -> ~/.claude/skills/
-./install.sh --dir /etc/claude  # custom config dir -> /etc/claude/skills/
-./install.sh --hook             # also set up the opt-in SessionStart hook (see hooks/README.md)
+./install.sh                    # all skills + machinery -> ./.claude/
+./install.sh --global --hook    # all skills + baseline hook -> ~/.claude/
+./install.sh --dir /etc/claude  # custom config dir -> /etc/claude/
+./install.sh --role pm          # a lean hard subset (just the PM skills)
 ```
 
 Use `--dir DIR` to target a non-standard Claude config directory (skills land
-in `DIR/skills/`; with `--hook`, the hook lands in `DIR/hooks/` and the
-settings snippet points at `DIR/settings.json`). It's mutually exclusive with
-`--global`.
+in `DIR/skills/`; the hook and `resolve.py` in `DIR/hooks/`; the `/role` command
+in `DIR/commands/`). It's mutually exclusive with `--global`. See
+[ROLES.md](ROLES.md) for the activation model.
 
-### Activation (optional hook)
+### Activation (the SessionStart hook)
 
 Skills trigger from their descriptions, but under-triggering is the most common
-failure mode at scale. The `skill-router` skill is the entry point; the optional
+failure mode at scale — which is why this library uses the name-only baseline +
+orchestrator described in [ROLES.md](ROLES.md). The `skill-router` skill is the
+entry point; the
 [SessionStart hook](hooks/README.md) injects a short pointer at session start so
 Claude consults the router before substantial SDLC work. It's a nudge, not a
 gate — the user's instructions always take precedence.
+
+### Roles & the activation model
+
+To stay reliable with 40+ skills, the library uses a **name-only baseline**: all
+skills install, but only the `skill-router` orchestrator + safety skills
+auto-trigger; the rest are listed by name and **activated on demand** by the
+router (which routes from a generated catalog and invokes by name). This keeps the
+listing from overflowing on any window. **Roles** promote a working set back to
+auto-triggering. See **[ROLES.md](ROLES.md)** for the full model.
+
+```bash
+./install.sh --hook        # all skills + name-only baseline + the SessionStart hook
+./install.sh --role pm     # hard subset: just the PM skills
+./install.sh --list        # list skills and roles
+```
+
+The `--hook` SessionStart hook writes the baseline into `settings.local.json` each
+session (and is what makes the dynamic model work). Switch the promoted set at
+runtime with the **`/role`** command (`/role backend`, `/role all` to reset). For
+environments without hooks (e.g. the web app), the repo is also a **plugin
+marketplace** of per-role hard subsets (generated from `roles.json` by
+`scripts/build-plugins.mjs`):
+
+```text
+/plugin marketplace add <owner>/dev-workflow-skills
+/plugin install dev-workflow-pm@dev-workflow
+```
 
 ## Skill Architecture
 
@@ -243,17 +272,11 @@ this format SDO-compliant.
 
 ### Listing Budget
 
-Every installed skill contributes its `name` + `description` to a single listing that Claude Code injects on every prompt. The total is capped by `skillListingBudgetFraction` in `settings.json` (default `0.01`, i.e. 1% of context). When the cap is exceeded, the least-recently-used descriptions are dropped, and dropped skills will not trigger.
+Every installed skill contributes its `name` + `description` to a single listing that Claude Code injects on every prompt. The total is capped by `skillListingBudgetFraction` in `settings.json` (default `0.01`, i.e. 1% of context). When the cap is exceeded, the least-recently-used descriptions are dropped arbitrarily, and dropped skills will not trigger. Check with `/doctor` — it reports dropped descriptions.
 
-Check with `/doctor` — it reports dropped descriptions when this happens.
+**This repo sidesteps the cap with a name-only baseline** rather than by raising the budget: only a pinned set keeps full descriptions; the rest are listed name-only (invoked on demand by `skill-router`). So the listing stays tiny on any window — see [ROLES.md](ROLES.md). A good `description` still matters for every skill: it's what the orchestrator routes on (from `catalog.json`) and what auto-triggers when a role promotes the skill to `on`.
 
-If you install many skills, raise the budget in `~/.claude/settings.json`:
-
-```json
-{ "skillListingBudgetFraction": 0.02 }
-```
-
-At 2% (~4k tokens of context budget), the full skill set in this repo fits comfortably.
+(If you instead run a flat install of many skills with descriptions on, you can raise the budget — e.g. `{ "skillListingBudgetFraction": 0.02 }` — but the baseline approach is preferred.)
 
 ### Frontmatter Fields
 

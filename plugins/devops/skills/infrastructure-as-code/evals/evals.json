@@ -1,0 +1,33 @@
+{
+  "skill_name": "infrastructure-as-code",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Write Terraform to provision a production-ready PostgreSQL RDS instance on AWS. It should be in a private subnet, encrypted, with automated backups, and accessible only from our ECS tasks.",
+      "expected_output": "Should create a Terraform module with VPC/subnet references, security group restricting access to ECS, encryption enabled, backup retention, and parameterized instance class.",
+      "assertions": [
+        "RDS instance is in a private subnet (not publicly accessible)",
+        "Security group allows ingress only from ECS security group (not 0.0.0.0/0)",
+        "storage_encrypted = true",
+        "Backup retention is configured (> 0 days)",
+        "Password is not hardcoded (uses variable with sensitive flag or secrets manager)",
+        "Instance class is parameterized via variable",
+        "Resources are tagged",
+        "Outputs expose endpoint and port for consuming modules"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Review this Terraform and tell me what's wrong:\n\nresource \"aws_s3_bucket\" \"data\" {\n  bucket = \"my-data-bucket\"\n}\n\nresource \"aws_s3_bucket_policy\" \"data\" {\n  bucket = aws_s3_bucket.data.id\n  policy = jsonencode({\n    Statement = [{\n      Effect = \"Allow\"\n      Principal = \"*\"\n      Action = \"s3:GetObject\"\n      Resource = \"${aws_s3_bucket.data.arn}/*\"\n    }]\n  })\n}",
+      "expected_output": "Should identify the public bucket policy (Principal: *), missing encryption, missing versioning, missing access logging, and missing tags.",
+      "assertions": [
+        "Identifies Principal '*' as making the bucket publicly readable",
+        "Flags missing server-side encryption",
+        "Flags missing versioning",
+        "Flags missing access logging",
+        "Flags missing tags",
+        "Provides corrected Terraform with restricted policy"
+      ]
+    }
+  ]
+}

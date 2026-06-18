@@ -1,17 +1,24 @@
-# Optional SessionStart hook
+# SessionStart hook — the activation baseline writer
 
-This hook is **opt-in**. It injects a short pointer at the start of each session
-reminding Claude that the skills library is installed and to consult the
-`skill-router` skill before substantial SDLC work. It is deliberately
-lightweight — a nudge, not a mandatory per-turn skill check.
+This hook drives the **name-only baseline** (see [ROLES.md](../ROLES.md)). On every
+session boundary (`startup|resume|clear|compact`) it writes the activation
+`skillOverrides` into `settings.local.json` — all skills `name-only` except the
+pinned set (and the active role's set, if one is set) — and emits
+`reloadSkills: true` so it applies to the current session. It also injects a short
+pointer telling Claude to route through `skill-router`.
 
-You do not need the hook for skills to work; skills still trigger from their
-descriptions. The hook just raises activation reliability (under-triggering is
-the library's most common failure mode).
+It runs on every boundary because the skill listing is **not re-injected after
+`/compact`**, so the baseline must be re-asserted.
+
+The hook is opt-in, but **the dynamic activation model depends on it**: without
+it, no baseline is written and you fall back to plain (overflow-prone)
+description-triggering. It must be installed by `./install.sh --hook` (or with the
+machinery present) because it calls `resolve.py` and reads the `.roles.json`
+marker next to the skills.
 
 ## What's here
 
-- `session-start.sh` — emits the SessionStart pointer as JSON on stdout.
+- `session-start.sh` — writes the baseline + emits the SessionStart JSON.
 - `hooks.json` — a reference snippet to merge into your Claude Code settings.
 
 ## Enable it
@@ -23,10 +30,11 @@ The easiest path:
 ./install.sh --hook --global # global (~/.claude/)
 ```
 
-`--hook` copies `session-start.sh` next to your installed skills and prints the
-exact `settings.json` snippet to paste, with the absolute `HOOK_PATH` filled in.
-It does **not** modify your `settings.json` automatically — merging is left to
-you so your existing config is never clobbered.
+`--hook` copies `session-start.sh` (and `resolve.py`) into your config's `hooks/`
+and prints the exact `settings.json` snippet to paste, with the absolute
+`HOOK_PATH` filled in. It does **not** modify your `settings.json` automatically —
+merging is left to you so your existing config is never clobbered. (The hook then
+manages the `skillOverrides` key in `settings.local.json` at runtime.)
 
 ## Manual setup
 
@@ -43,5 +51,6 @@ Remove the `SessionStart` block from your `settings.json`. That's it.
 
 ## Requirements
 
-`session-start.sh` uses `python3` for safe JSON encoding and falls back to a
-`sed`-based encoder if `python3` is unavailable, so it works on a bare shell.
+`session-start.sh` uses `python3` to compute/merge the baseline and to encode its
+JSON. If `python3` is unavailable it still emits the nudge (via a `sed` fallback)
+but skips writing the baseline — so the dynamic model effectively needs `python3`.

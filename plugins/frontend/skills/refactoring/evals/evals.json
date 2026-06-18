@@ -1,0 +1,44 @@
+{
+  "skill_name": "refactoring",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Refactor this JavaScript function:\n\nfunction processData(data, type, format, verbose, dryRun) {\n  let result = [];\n  for (let i = 0; i < data.length; i++) {\n    if (type === 'user') {\n      if (data[i].age > 18) {\n        if (data[i].active) {\n          if (format === 'json') {\n            result.push(JSON.stringify(data[i]));\n          } else if (format === 'csv') {\n            result.push(`${data[i].name},${data[i].age},${data[i].email}`);\n          } else {\n            result.push(data[i].toString());\n          }\n        }\n      }\n    } else if (type === 'order') {\n      if (data[i].total > 0) {\n        if (data[i].status !== 'cancelled') {\n          if (format === 'json') {\n            result.push(JSON.stringify(data[i]));\n          } else if (format === 'csv') {\n            result.push(`${data[i].id},${data[i].total},${data[i].status}`);\n          } else {\n            result.push(data[i].toString());\n          }\n        }\n      }\n    }\n    if (verbose) console.log(`Processed item ${i}`);\n  }\n  if (!dryRun) {\n    saveToFile(result);\n  }\n  return result;\n}",
+      "expected_output": "Should identify multiple smells (deep nesting, long parameter list, duplicated formatting logic, SRP violation), check for tests first, then apply transformations one at a time.",
+      "assertions": [
+        "Asks about or checks for existing tests before refactoring",
+        "Identifies deep nesting as the primary smell",
+        "Identifies duplicated format logic between user and order branches",
+        "Identifies long parameter list (5 params)",
+        "Applies early returns to flatten nesting",
+        "Extracts formatting logic into a shared function",
+        "Introduces a parameter object or options pattern",
+        "Shows each transformation step separately",
+        "Runs or suggests running tests between steps"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I want to refactor this module but there are no tests. What should I do?",
+      "expected_output": "Should insist on writing characterization tests first, explain why, and help write them before any refactoring begins.",
+      "assertions": [
+        "Does not start refactoring without tests",
+        "Explains characterization tests and their purpose",
+        "Offers to help write the characterization tests",
+        "Tests document current behavior, including quirks"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Can you refactor my entire codebase to use better patterns?",
+      "expected_output": "Should push back on the scope — suggest identifying the highest-impact areas first, then refactoring incrementally. Should not attempt a sweeping rewrite.",
+      "assertions": [
+        "Does not attempt to refactor everything at once",
+        "Suggests identifying highest-impact areas first",
+        "Recommends incremental approach",
+        "Asks which areas cause the most pain or confusion",
+        "Applies KISS to the refactoring process itself"
+      ]
+    }
+  ]
+}

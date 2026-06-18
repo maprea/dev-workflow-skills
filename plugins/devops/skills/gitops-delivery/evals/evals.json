@@ -1,0 +1,44 @@
+{
+  "skill_name": "gitops-delivery",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We have a deployment repo with Helm charts for our 5 services. We want to set up ArgoCD to automatically deploy to our staging cluster when the deployment repo is updated, but require manual sync for production. How should we configure this?",
+      "expected_output": "Should create ArgoCD Application resources per service per environment, with automated sync policy for staging and no automated sync for production. Should include health checks, sync waves if ordering matters, and RBAC considerations.",
+      "assertions": [
+        "Creates ArgoCD Application manifests for each service in staging with automated sync (prune + selfHeal)",
+        "Creates ArgoCD Application manifests for production WITHOUT automated sync",
+        "Uses the deployment repo as the source (repoURL points to the deployment repo)",
+        "Configures per-environment value files (staging vs production Helm values)",
+        "Includes health checks in sync policy",
+        "Recommends App of Apps pattern for managing all Applications as a unit",
+        "References deployment-repo for the repo structure itself"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our app repo CI builds a Docker image and pushes it to GHCR. How do I automatically update the deployment repo when a new image is built?",
+      "expected_output": "Should present cross-repo trigger patterns with concrete workflow YAML, recommending the PR-based approach for auditability.",
+      "assertions": [
+        "Presents at least 2 cross-repo trigger patterns (repository_dispatch + PR, Renovate, or similar)",
+        "Recommends the pattern that creates a PR (not direct push) for auditability",
+        "Shows concrete GitHub Actions workflow YAML for both the app repo trigger and deployment repo receiver",
+        "Explains that the deployment repo PR triggers contract/E2E tests before merge",
+        "Does not assume the user already has ArgoCD — the trigger pattern works regardless of the delivery mechanism"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Should I use ArgoCD or just keep deploying from our CI pipeline with kubectl apply? We have a single Kubernetes cluster and 3 services.",
+      "expected_output": "Should present an honest trade-off analysis rather than assuming GitOps is always the answer. Should help the user decide based on their scale and needs.",
+      "assertions": [
+        "Does NOT assume GitOps is always the right answer",
+        "Presents trade-offs: setup complexity vs. drift detection, audit trail, self-healing",
+        "Acknowledges that push-based (kubectl apply from CI) is simpler and may be sufficient for this scale",
+        "Identifies signals that would make GitOps worth it (compliance, multi-env, drift concerns)",
+        "References cicd-pipeline for push-based deployment patterns if that's the better fit",
+        "References deployment-repo regardless — version pinning is valuable even without GitOps operators"
+      ]
+    }
+  ]
+}

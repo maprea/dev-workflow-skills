@@ -1,0 +1,34 @@
+{
+  "skill_name": "retrospective",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We just had a production outage — our payment service was down for 45 minutes because a database migration locked a table. 200 users couldn't complete checkouts. Help me write the post-mortem.",
+      "expected_output": "Should produce a blameless incident post-mortem with timeline, root cause analysis (5 Whys), and prevention action items.",
+      "assertions": [
+        "Uses blameless language throughout (systems, not people)",
+        "Reconstructs a timeline with key events",
+        "Applies 5 Whys to get past 'migration locked table' to systemic cause",
+        "Identifies root cause as missing migration safety process, not the specific migration",
+        "Action items include prevention, detection, AND process improvements",
+        "Each action item has a specific owner and deadline",
+        "Includes 'what went well' section (not just what went wrong)",
+        "Quantifies impact (200 users, 45 minutes, potential revenue loss)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Run a sprint retrospective for our team. This sprint we completed 8 of 10 planned stories, had one carry-over from last sprint, and our CI pipeline was broken for 2 days due to a flaky test. Team morale seems a bit low.",
+      "expected_output": "Should facilitate a structured retro using Start/Stop/Continue or similar format, address the specific issues (carry-over, CI, morale), and produce 2-3 actionable items.",
+      "assertions": [
+        "Uses a structured format (Start/Stop/Continue, 4Ls, or similar)",
+        "Addresses the CI breakage specifically (not just generically)",
+        "Addresses carry-over pattern (is this recurring?)",
+        "Acknowledges morale concern constructively",
+        "Produces exactly 2-3 action items (not 10)",
+        "Each action item has an owner",
+        "Includes review of previous retro action items"
+      ]
+    }
+  ]
+}

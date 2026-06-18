@@ -1,8 +1,10 @@
 # Evaluating Skills
 
-Each skill ships with `evals/evals.json`. There is no automated grader — evals
-are run by replaying their prompts and judging the result against the
-assertions. This doc describes the schema and a repeatable way to run them.
+Each skill ships with `evals/evals.json`. Evals are run by replaying their
+prompts and judging the result against the assertions — by hand, or via the
+automated harness ([below](#automated-harness-tdd-for-the-skill-set)), whose
+grader is a skeptical LLM-as-judge rather than a deterministic checker. This doc
+describes the schema and a repeatable way to run them.
 
 ## Schema
 

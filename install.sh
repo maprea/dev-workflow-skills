@@ -1,76 +1,48 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SKILLS_DIR="$(cd "$(dirname "$0")/skills" 2>/dev/null && pwd)" || {
-  echo "Error: must be run from the dev-workflow-skills repo root" >&2
-  exit 1
-}
-
-FREQUENT_SKILLS=(
-  api-design
-  architecture-design
-  architecture-documentation
-  bug-investigating
-  cicd-pipeline
-  code-reviewing
-  configuration-strategy
-  containerization
-  dependency-impact-analysis
-  dependency-management
-  deployment-checklist
-  feature-planning
-  git-workflow
-  observability-design
-  performance-optimization
-  prd-writing
-  project-documentation
-  refactoring
-  security-audit
-  skill-router
-  tdd-workflow
-  technical-debt-review
-  test-data-strategy
-  test-suite-design
-  ui-ux-design
-  verification-before-completion
-  writing-skills
-)
+REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
+SKILLS_DIR="$REPO_ROOT/skills"
+RESOLVE="$REPO_ROOT/scripts/resolve.py"
+[[ -d "$SKILLS_DIR" ]] || { echo "Error: must be run from the dev-workflow-skills repo root" >&2; exit 1; }
 
 usage() {
   cat <<EOF
 Usage: $(basename "$0") [options] [skill1 skill2 ...]
 
-Install Claude Code skills from this repo.
+Install Claude Code skills from this repo. By default installs ALL skills with a
+name-only activation baseline (only the skill-router orchestrator + safety skills
+auto-trigger; the rest are invoked on demand). Scope to a role at runtime with the
+/role command, or install a hard subset with --role.
 
 Options:
-  -g, --global    Install to ~/.claude/skills/ (default: ./.claude/skills/)
-  -d, --dir DIR   Install to DIR/skills/ — a custom Claude config directory
-                  (mutually exclusive with --global; the hook, if requested,
-                  goes to DIR/hooks/ and settings live at DIR/settings.json)
-  -a, --all       Install all skills (default: frequent skills only)
-  -k, --hook      Also install the opt-in SessionStart hook (prints the
-                  settings.json snippet to enable it; never edits settings)
-  -l, --list      List available skills
-  -h, --help      Show this help
+  -g, --global     Install to ~/.claude/ (default: ./.claude/)
+  -d, --dir DIR    Install to a custom Claude config directory DIR
+                   (mutually exclusive with --global)
+  -r, --role ROLE  Install only one role's skills (a lean, hard subset; see
+                   --list for roles). Without it, all skills are installed.
+  -k, --hook       Also install the SessionStart hook that writes the activation
+                   baseline (prints the settings snippet; never edits settings)
+  -l, --list       List available skills and roles
+  -h, --help       Show this help
 
 Arguments:
-  skill names     Install specific skills (overrides --all / default set)
+  skill names      Install specific skills only (advanced; skips the role/
+                   orchestrator machinery unless skill-router is included)
 
 Examples:
-  $(basename "$0")                          # install frequent skills to current project
-  $(basename "$0") --global                 # install frequent skills globally
-  $(basename "$0") --all --global           # install all skills globally
-  $(basename "$0") --dir /etc/claude --all  # install all skills to /etc/claude/skills
-  $(basename "$0") -d ~/work/.claude         # install frequent skills to a custom config dir
-  $(basename "$0") feature-planning         # install one skill
-  $(basename "$0") -g code-reviewing prd-writing
+  $(basename "$0")                          # all skills + machinery -> ./.claude/
+  $(basename "$0") --global --hook           # all skills + hook, globally
+  $(basename "$0") --role pm                 # just the PM subset
+  $(basename "$0") --dir /etc/claude         # all skills to /etc/claude/
+  $(basename "$0") feature-planning          # one skill, no machinery
 EOF
 }
 
 GLOBAL=false
-ALL=false
 HOOK=false
 CONFIG_DIR=""
+ROLE=""
 SELECTED=()
 
 while [[ $# -gt 0 ]]; do
@@ -81,14 +53,23 @@ while [[ $# -gt 0 ]]; do
       [[ $# -gt 0 ]] || { echo "Error: --dir requires a path" >&2; exit 1; }
       CONFIG_DIR="$1"; shift ;;
     --dir=*) CONFIG_DIR="${1#*=}"; shift ;;
-    -a|--all) ALL=true; shift ;;
+    -a|--all) shift ;;  # accepted for back-compat; installing all is the default
+    -r|--role)
+      shift
+      [[ $# -gt 0 ]] || { echo "Error: --role requires a role name" >&2; exit 1; }
+      ROLE="$1"; shift ;;
+    --role=*) ROLE="${1#*=}"; shift ;;
     -k|--hook) HOOK=true; shift ;;
     -l|--list)
       echo "Available skills:"
       ls "$SKILLS_DIR" | sed 's/^/  /'
       echo ""
-      echo "Frequent skills (default):"
-      printf '  %s\n' "${FREQUENT_SKILLS[@]}"
+      echo "Roles (--role, or /role at runtime):"
+      if command -v python3 >/dev/null 2>&1 && [[ -f "$RESOLVE" ]]; then
+        python3 "$RESOLVE" roles | sed 's/^/  /'
+      else
+        echo "  (install python3 to list roles from roles.json)"
+      fi
       exit 0
       ;;
     -h|--help) usage; exit 0 ;;
@@ -97,27 +78,30 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if [[ -n "$CONFIG_DIR" ]]; then
-  if $GLOBAL; then
-    echo "Error: --dir and --global are mutually exclusive" >&2
-    exit 1
-  fi
-  # Expand a leading ~ (survives even when the path was quoted).
-  case "$CONFIG_DIR" in "~" | "~/"*) CONFIG_DIR="${HOME}${CONFIG_DIR#\~}" ;; esac
-  DEST="$CONFIG_DIR/skills"
-elif $GLOBAL; then
-  DEST="$HOME/.claude/skills"
-else
-  DEST="$(pwd)/.claude/skills"
+if [[ -n "$ROLE" ]]; then
+  command -v python3 >/dev/null 2>&1 || { echo "Error: --role requires python3" >&2; exit 1; }
+  python3 "$RESOLVE" label "$ROLE" >/dev/null 2>&1 || {
+    echo "Error: unknown role '$ROLE'. Run '$(basename "$0") --list' to see roles." >&2; exit 1; }
 fi
 
+if [[ -n "$CONFIG_DIR" ]]; then
+  $GLOBAL && { echo "Error: --dir and --global are mutually exclusive" >&2; exit 1; }
+  case "$CONFIG_DIR" in "~" | "~/"*) CONFIG_DIR="${HOME}${CONFIG_DIR#\~}" ;; esac
+  CLAUDE_DIR="$CONFIG_DIR"
+elif $GLOBAL; then
+  CLAUDE_DIR="$HOME/.claude"
+else
+  CLAUDE_DIR="$(pwd)/.claude"
+fi
+DEST="$CLAUDE_DIR/skills"
 mkdir -p "$DEST"
 
+# Resolve the skill set: explicit args > role subset > all (default).
 if [[ ${#SELECTED[@]} -eq 0 ]]; then
-  if $ALL; then
-    mapfile -t SELECTED < <(ls "$SKILLS_DIR")
+  if [[ -n "$ROLE" ]]; then
+    mapfile -t SELECTED < <(python3 "$RESOLVE" skills "$ROLE")
   else
-    SELECTED=("${FREQUENT_SKILLS[@]}")
+    mapfile -t SELECTED < <(ls "$SKILLS_DIR")
   fi
 fi
 
@@ -133,29 +117,66 @@ for skill in "${SELECTED[@]}"; do
   echo "Installed: $skill -> $DEST/$skill"
 done
 
+# The role/orchestrator machinery is set up only when the orchestrator itself is
+# installed (it is, for the default-all and every role; not for ad-hoc single-skill
+# installs). It is also needed by the hook.
+has_router=false
+for s in "${SELECTED[@]}"; do [[ "$s" == "skill-router" ]] && has_router=true; done
+
+if $has_router; then
+  # Catalog + role map alongside the skills, for the orchestrator and resolve.py.
+  [[ -f "$REPO_ROOT/roles.json" ]] && cp "$REPO_ROOT/roles.json" "$DEST/.roles.json"
+  [[ -f "$REPO_ROOT/catalog.json" ]] && cp "$REPO_ROOT/catalog.json" "$DEST/.catalog.json"
+
+  # resolve.py is the shared engine for the hook + /role command. Park it next to
+  # where the hook lives.
+  TOOLS_DIR="$CLAUDE_DIR/hooks"
+  mkdir -p "$TOOLS_DIR"
+  cp "$RESOLVE" "$TOOLS_DIR/resolve.py"
+
+  if [[ -n "$ROLE" ]]; then
+    printf '%s\n' "$ROLE" > "$DEST/.active-role"
+    echo "Wrote role marker -> $DEST/.active-role ($ROLE)"
+  fi
+
+  # Install the /role command, substituting absolute paths.
+  CMD_SRC="$REPO_ROOT/commands/role.md"
+  if [[ -f "$CMD_SRC" ]]; then
+    CMD_DEST_DIR="$CLAUDE_DIR/commands"
+    mkdir -p "$CMD_DEST_DIR"
+    sed -e "s|@@RESOLVE@@|$TOOLS_DIR/resolve.py|g" \
+        -e "s|@@SKILLS@@|$DEST|g" \
+        -e "s|@@SETTINGS@@|$CLAUDE_DIR/settings.local.json|g" \
+        -e "s|@@ROLES@@|$DEST/.roles.json|g" \
+        -e "s|@@ACTIVE_ROLE@@|$DEST/.active-role|g" \
+        "$CMD_SRC" > "$CMD_DEST_DIR/role.md"
+    echo "Installed /role command -> $CMD_DEST_DIR/role.md"
+  fi
+fi
+
 if $HOOK; then
-  REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
   HOOK_SRC="$REPO_ROOT/hooks/session-start.sh"
   if [[ ! -f "$HOOK_SRC" ]]; then
     echo "Error: hook script not found at $HOOK_SRC" >&2
     errors=$((errors + 1))
+  elif ! $has_router; then
+    echo "Warning: --hook needs the orchestrator; install includes no skill-router, skipping hook." >&2
   else
-    CLAUDE_DIR="$(dirname "$DEST")"
     HOOK_DEST_DIR="$CLAUDE_DIR/hooks"
     mkdir -p "$HOOK_DEST_DIR"
     cp "$HOOK_SRC" "$HOOK_DEST_DIR/session-start.sh"
     chmod +x "$HOOK_DEST_DIR/session-start.sh"
     HOOK_PATH="$HOOK_DEST_DIR/session-start.sh"
-    SETTINGS="$CLAUDE_DIR/settings.json"
     echo "Installed hook script -> $HOOK_PATH"
     echo ""
-    echo "To enable it, merge this into $SETTINGS (the installer does NOT edit settings for you):"
+    echo "To enable it, merge this into $CLAUDE_DIR/settings.json (the installer"
+    echo "does NOT edit settings for you):"
     echo ""
     cat <<EOF
   "hooks": {
     "SessionStart": [
       {
-        "matcher": "startup|clear|compact",
+        "matcher": "startup|resume|clear|compact",
         "hooks": [
           { "type": "command", "command": "$HOOK_PATH" }
         ]
@@ -164,7 +185,8 @@ if $HOOK; then
   }
 EOF
     echo ""
-    echo "Then start a new session and run /doctor to confirm it's registered."
+    echo "The hook writes the activation baseline to settings.local.json on each"
+    echo "session start. Start a new session and run /doctor to confirm it's registered."
   fi
 fi
 
