@@ -106,3 +106,87 @@ flaky). Two findings from running this make the choice necessary:
 The useful, stable signal is: **GREEN ≥ RED on every skill** (the skill never
 hurts), and **GREEN doesn't drop between commits** (no regression). That's what
 the gate enforces.
+
+## Activation evaluation (design note — not yet implemented)
+
+The harness above force-loads a skill before generating GREEN, so it deliberately
+**bypasses activation**: it answers *"if this skill runs, does it help?"* — not
+*"does the right skill run?"* Under the name-only baseline + orchestrator model
+(see [ROLES.md](ROLES.md)), the second question is the critical path: a name-only
+skill only delivers its proven lift if `skill-router` routes to it. In short:
+
+> **realized quality = routing accuracy × (GREEN − RED gap)**
+
+`run.py` measures the gap; nothing yet measures the routing factor. This note
+specifies the eval that closes that hole. Implementation is deferred to a clean
+session.
+
+### What to evaluate (three layers)
+
+1. **Plumbing — already covered by `scripts/verify.sh`.** Deterministic, offline:
+   the SessionStart hook writes the correct `skillOverrides` (pinned `on`, rest
+   `name-only`), the `/role` flow promotes/resets, the catalog is complete. This
+   is the *machinery*, not the routing *intelligence*.
+2. **Routing accuracy (the key new unit test).** Isolate the decision: feed the
+   model the **catalog** + a prompt and force a structured answer
+   `{ chosen_skill | NONE }` using the router's own prompt, **on the shipping
+   model (haiku)**. Grade exact-match against the expected skill. Fast, cheap,
+   and it directly tunes the catalog + router prompt.
+3. **End-to-end activation (behavioral, fewer cases).** Spin a real subagent with
+   the actual name-only baseline installed (router `on`, everything else
+   `name-only`, nothing hand-loaded), feed the prompt, and inspect the transcript
+   for whether `Skill(expected)` was actually invoked. Catches what layer 2
+   can't: does the orchestrator itself fire, does it *invoke* vs merely *name* a
+   skill, does it over-route.
+
+### The dataset is (almost) free — mine the existing evals
+
+No separate corpus needed; derive routing cases from `evals/evals.json`:
+
+- **Happy-path** prompt (eval #1) → positive case: router should pick *that* skill.
+- **Scope-boundary** prompt (eval #3) → negative/redirect case: router should pick
+  `NONE` or the *other* named skill (these evals often already say "hands off to
+  X" — pre-labeled gold). ~29 skills currently carry a scope-boundary case.
+- Add a handful of trivial/conversational prompts that should route to nothing
+  (guards against over-routing, which now costs an extra hop).
+
+This stays in sync automatically: every new skill ships 3 evals → 2–3 new routing
+cases.
+
+### Metrics & gate (reuse the run.py philosophy)
+
+- **Top-1 routing accuracy** (per-skill + aggregate) on positives.
+- **False-activation rate** on negatives/trivial prompts.
+- **Confusion pairs** — which skills get mistaken for each other; this names the
+  exact descriptions that need disambiguating.
+- **Router-invocation rate** (layer 3) — does the orchestrator fire on
+  substantial-work prompts?
+- **Gate = regression-vs-baseline**, identical to `run.py`: routing accuracy must
+  not drop between commits; a new skill must clear a threshold before merge.
+
+### TDD loop for routing (RED → GREEN)
+
+A misroute is a RED. The fix is almost always a **catalog description** edit
+(disambiguate keywords / when-to-use), then re-run until GREEN — the
+`writing-skills` baseline→counter loop, applied to descriptions with routing
+accuracy as the metric. Descriptions are the shared tuning surface for both
+routing (the catalog) and direct auto-trigger (pinned/role-promoted skills), so
+one improvement pays twice.
+
+### The haiku decision is an output, not an assumption
+
+`skill-router` runs on **haiku** (`model: haiku`), and routing across 40+ skills
+by reading the full `catalog.json` is now load-bearing. Run layer 2 **on haiku**
+to measure real routing quality. If it's acceptable, keep haiku (cheap, fast); if
+not, the levers are: promote the router to sonnet, improve catalog descriptions
+(helps both models), or hybrid. Let the eval decide.
+
+### Open questions for the implementation session
+
+- **Layers:** start with layer 2 (≈90% of the signal cheaply); add a small layer-3
+  suite for the "does the router fire / does it invoke" failure modes.
+- **Corpus:** confirm the mined-from-evals dataset (vs. a separately curated set).
+- **Harness:** fold into `run.py` as a `--routing` mode (reusing its judge,
+  majority voting, and `baseline.json` regression gate), or build a sibling
+  runner. A separate `routing-baseline.json` keeps the gate independent of the
+  content-quality baseline.
