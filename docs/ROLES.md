@@ -63,8 +63,9 @@ or list roles with `python3 scripts/resolve.py roles`.
 
 ```bash
 ./install.sh --hook              # all skills, name-only baseline, + the hook
-./install.sh --global --hook     # ...globally
+./install.sh --global --hook     # ...to the user config dir
 ./install.sh --role pm           # hard subset: just the PM skills (no orchestrator gating)
+./install.sh --role pm --prune   # ...and drop other library skills from a prior install
 ```
 
 The default installs **all** skills plus the machinery: the catalog/role markers
@@ -74,6 +75,28 @@ SessionStart hook that writes the baseline (`skillOverrides`) into
 and emits `reloadSkills`. **The dynamic model needs the hook** — without it, no
 baseline is applied and you fall back to plain description-triggering. The
 installer prints the settings snippet; it never edits your settings for you.
+
+Re-running install is idempotent: each skill is re-copied cleanly (no stale
+leftover files). `--prune` additionally removes previously-installed library skills
+outside the new selection (never your own custom skills) — use it to narrow a prior
+all-skills install down to one role's hard subset. `--global` resolves to
+`$CLAUDE_CONFIG_DIR` when that env var is set, else `~/.claude`; explicit `--dir`
+always wins.
+
+### Uninstall
+
+```bash
+./uninstall.sh                   # remove from ./.claude/
+./uninstall.sh --global          # ...from the user config dir
+./uninstall.sh --dry-run         # preview only
+```
+
+Removes only what the installer created (this repo's skills, the catalog/role
+markers, `resolve.py`, the hook script, the `/role` command) and prunes the
+library's `skillOverrides` from `settings.local.json`. It prompts first (`--yes` to
+skip) and prints the `SessionStart` block to delete from `settings.json` — which it
+never edits. The `.active-role` marker is only written by `--role` (and rewritten by
+`/role`); `/role all|none` and `uninstall.sh` clear it.
 
 ### Switch roles at runtime
 

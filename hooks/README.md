@@ -49,6 +49,12 @@ manages the `skillOverrides` key in `settings.local.json` at runtime.)
 
 Remove the `SessionStart` block from your `settings.json`. That's it.
 
+To remove the whole library (skills + machinery + this hook script), run
+[`./uninstall.sh`](../uninstall.sh) (`--global` / `--dir` mirror the installer). It
+deletes the hook script and prunes the library's `skillOverrides` from
+`settings.local.json`, then prints this same `SessionStart` block for you to delete
+from `settings.json` by hand — it never edits `settings.json`.
+
 ## Requirements
 
 `session-start.sh` uses `python3` to compute/merge the baseline and to encode its

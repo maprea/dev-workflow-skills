@@ -105,15 +105,37 @@ cp -r skills/* ~/.claude/skills/
 
 ```bash
 ./install.sh                    # all skills + machinery -> ./.claude/
-./install.sh --global --hook    # all skills + baseline hook -> ~/.claude/
+./install.sh --global --hook    # all skills + baseline hook -> user config dir
 ./install.sh --dir /etc/claude  # custom config dir -> /etc/claude/
 ./install.sh --role pm          # a lean hard subset (just the PM skills)
+./install.sh --role pm --prune  # ...and remove other library skills from a prior install
 ```
+
+Re-running install is safe: each skill is re-copied cleanly (no stale leftover
+files). Add `--prune` to also remove previously-installed **library** skills that
+aren't in the new selection — it never touches your own custom skills.
 
 Use `--dir DIR` to target a non-standard Claude config directory (skills land
 in `DIR/skills/`; the hook and `resolve.py` in `DIR/hooks/`; the `/role` command
-in `DIR/commands/`). It's mutually exclusive with `--global`. See
+in `DIR/commands/`). It's mutually exclusive with `--global`. `--global` installs
+to `$CLAUDE_CONFIG_DIR` if that env var is set, otherwise `~/.claude/`. See
 [ROLES.md](docs/ROLES.md) for the activation model.
+
+### Uninstallation
+
+```bash
+./uninstall.sh                    # remove from ./.claude/
+./uninstall.sh --global           # remove from the user config dir ($CLAUDE_CONFIG_DIR or ~/.claude)
+./uninstall.sh --dir /etc/claude  # remove from a custom config dir
+./uninstall.sh --dry-run          # preview what would be removed; change nothing
+```
+
+`uninstall.sh` removes only what the installer created — this repo's skills, the
+catalog/role markers, `resolve.py`, the SessionStart hook script, and the `/role`
+command — and prunes the library's `skillOverrides` from `settings.local.json`. Your
+own custom skills are left alone. It prompts before deleting (`--yes` to skip). It
+never edits `settings.json`; if you enabled the hook, it prints the exact
+`SessionStart` block for you to remove from `settings.json` by hand.
 
 ### Activation (the SessionStart hook)
 

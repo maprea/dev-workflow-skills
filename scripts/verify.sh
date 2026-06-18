@@ -93,5 +93,56 @@ runrole none || fail "/role none"
 [[ ! -f "$TMP/inst/skills/.active-role" ]] || fail ".active-role not cleared"
 pass "/role sets role + promotes set; /role none resets to baseline"
 
+echo "8. resolve.py prune removes managed keys, preserves the rest"
+printf '{"model":"x","skillOverrides":{"api-design":"name-only","external":"off"}}' > "$TMP/p.json"
+python3 scripts/resolve.py prune "$TMP/p.json" api-design >/dev/null || fail "prune"
+python3 - "$TMP/p.json" <<'PY' || fail "prune result"
+import json, sys
+d = json.load(open(sys.argv[1]))
+assert d["model"] == "x", "preserve unrelated key"
+assert d["skillOverrides"] == {"external": "off"}, d.get("skillOverrides")
+PY
+printf '{"skillOverrides":{"api-design":"name-only"}}' > "$TMP/p2.json"
+python3 scripts/resolve.py prune "$TMP/p2.json" api-design >/dev/null || fail "prune empty"
+python3 -c "import json;d=json.load(open('$TMP/p2.json'));assert 'skillOverrides' not in d" \
+  || fail "prune should drop empty skillOverrides"
+pass "prune removes managed keys, keeps unmanaged, drops empty skillOverrides"
+
+echo "9. install --prune narrows to the selection (keeps user skills)"
+./install.sh --dir "$TMP/narrow" >/dev/null 2>&1 || fail "install all"
+mkdir -p "$TMP/narrow/skills/zz-user-skill"   # a custom skill the user added
+./install.sh --role pm --prune --dir "$TMP/narrow" >/dev/null 2>&1 || fail "install --prune"
+[[ -d "$TMP/narrow/skills/prd-writing" ]] || fail "pm skill missing after prune"
+[[ ! -d "$TMP/narrow/skills/containerization" ]] || fail "non-pm skill should be pruned"
+[[ -d "$TMP/narrow/skills/zz-user-skill" ]] || fail "user skill must be preserved"
+pass "--prune removes non-selected library skills, preserves user skills"
+
+echo "10. uninstall removes our files, prunes local settings, preserves user skill + settings.json"
+./install.sh --hook --dir "$TMP/un" >/dev/null 2>&1 || fail "install for uninstall"
+mkdir -p "$TMP/un/skills/zz-user-skill"
+printf '{"model":"x","skillOverrides":{"api-design":"name-only","external":"off"}}' > "$TMP/un/settings.local.json"
+printf '{"hooks":{"SessionStart":[]}}' > "$TMP/un/settings.json"
+./uninstall.sh --yes --dir "$TMP/un" >/dev/null 2>&1 || fail "uninstall"
+for gone in skills/api-design skills/.roles.json skills/.catalog.json \
+            hooks/resolve.py hooks/session-start.sh commands/role.md; do
+  [[ ! -e "$TMP/un/$gone" ]] || fail "uninstall left $gone"
+done
+[[ -d "$TMP/un/skills/zz-user-skill" ]] || fail "user skill must be preserved"
+[[ -f "$TMP/un/settings.json" ]] || fail "settings.json must be untouched"
+python3 - "$TMP/un/settings.local.json" <<'PY' || fail "settings.local prune"
+import json, sys
+d = json.load(open(sys.argv[1]))
+assert d["model"] == "x", "preserve unrelated key"
+assert "api-design" not in d.get("skillOverrides", {}), "library override should be pruned"
+assert d.get("skillOverrides", {}).get("external") == "off", "unmanaged override preserved"
+PY
+pass "uninstall removes library files, prunes local overrides, keeps user skill + settings.json"
+
+echo "11. --global honors CLAUDE_CONFIG_DIR"
+CLAUDE_CONFIG_DIR="$TMP/cfg" ./install.sh --global >/dev/null 2>&1 || fail "install --global w/ CLAUDE_CONFIG_DIR"
+[[ $(find "$TMP/cfg/skills" -maxdepth 1 -mindepth 1 -type d 2>/dev/null | wc -l) -ge 1 ]] \
+  || fail "--global did not install under CLAUDE_CONFIG_DIR"
+pass "--global installs under CLAUDE_CONFIG_DIR when set"
+
 echo ""
 echo "ALL CHECKS PASSED"
