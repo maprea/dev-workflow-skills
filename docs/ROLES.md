@@ -161,7 +161,7 @@ Generated from `roles.json` by `scripts/build-plugins.mjs` into
 (do not edit by hand).
 
 ```text
-/plugin marketplace add maprea/swe-workflow-skills
+/plugin marketplace add SWEStash/swe-workflow-skills
 /plugin install swe-workflow-pm@swe-workflow
 ```
 

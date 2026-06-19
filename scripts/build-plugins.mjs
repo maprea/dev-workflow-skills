@@ -91,7 +91,7 @@ function build() {
       displayName: r.label,
       description: r.description,
       version: VERSION,
-      author: { name: "Mariano Aprea" },
+      author: { name: "SWEStash" },
       keywords: ["skills", "sdlc", key],
     };
     mkdirSync(join(pluginDir, ".claude-plugin"), { recursive: true });
@@ -114,7 +114,7 @@ function build() {
     displayName: "SWE Workflow Skills",
     description: "Role-scoped SDLC workflow skills. Install the plugin(s) for your role.",
     version: VERSION,
-    author: { name: "Mariano Aprea" },
+    author: { name: "SWEStash" },
     plugins: marketplacePlugins,
   };
   writeFileSync(

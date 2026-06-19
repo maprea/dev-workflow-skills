@@ -45,7 +45,7 @@ overflows that budget and some skills silently stop triggering. Two designs avoi
 the **per-role plugin** for your hat. Simplest, and it works everywhere.
 
 ```text
-/plugin marketplace add maprea/swe-workflow-skills
+/plugin marketplace add SWEStash/swe-workflow-skills
 /plugin install swe-workflow-pm@swe-workflow
 ```
 

@@ -96,7 +96,7 @@ Install the per-role plugin for your hat. Each is a focused, crop-safe subset th
 auto-triggers with no extra setup, and it works everywhere plugins do:
 
 ```text
-/plugin marketplace add maprea/swe-workflow-skills
+/plugin marketplace add SWEStash/swe-workflow-skills
 /plugin install swe-workflow-pm@swe-workflow
 ```
 

@@ -4,7 +4,7 @@
   "description": "Role-scoped SDLC workflow skills. Install the plugin(s) for your role.",
   "version": "0.1.0",
   "author": {
-    "name": "Mariano Aprea"
+    "name": "SWEStash"
   },
   "plugins": [
     {
