@@ -1,8 +1,16 @@
 # Roles & activation model
 
 This library uses a **name-only baseline with an active orchestrator** so that a
-large skill set stays reliable on any context window. The source of truth is
-[`roles.json`](../roles.json); the catalog and marketplace are generated from it.
+large skill set stays reliable on any context window.
+
+**Orchestrator-routed activation is a core feature in its own right** — not just a
+way to manage cropping. The `skill-router` deterministically selects and invokes the
+right skill from a full catalog, so activation **does not depend on Claude's
+description-based auto-triggering** (which is probabilistic and degrades as the skill
+set grows). Routing both eliminates cropping *and* makes activation predictable and
+testable — the repo ships a routing-eval harness ([EVALS.md](EVALS.md)) to keep it
+honest. The source of truth is [`roles.json`](../roles.json); the catalog and
+marketplace are generated from it.
 
 ## The problem this solves
 
@@ -25,7 +33,8 @@ unreliable and uncontrolled.
   `catalog.json` (every skill's full description, with no budget pressure), matches
   your intent, and **invokes the chosen skill by name**. This replaces ~40 fragile
   description matches with one reliable router (kept `on`, reinforced by the
-  SessionStart hook nudge, always available as `/skill-router`).
+  SessionStart hook nudge, always available as `/skill-router`). Routing — not
+  auto-trigger — is the activation path the library relies on.
 - **Roles promote a working set back to `on`.** Activating a role flips its skills
   to auto-trigger for direct, one-hop use of your daily set.
 

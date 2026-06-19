@@ -159,8 +159,11 @@ never edits `settings.json`; if you enabled the hook, it prints the exact
 At 40+ skills, description-based auto-triggering becomes unreliable: Claude injects
 each skill's name+description into a listing capped at ~1% of context, and past the
 cap it drops descriptions (so skills silently stop auto-triggering). This library's
-answer is the **name-only baseline** — only `skill-router` + the safety skills keep
-descriptions; the orchestrator routes to everything else by name. That baseline is
+answer is **orchestrator-routed activation** — a core feature, not just a cropping
+fix: only `skill-router` + the safety skills keep descriptions, and the router
+deterministically invokes everything else by name from a full catalog. **Activation
+is driven by the router, not by Claude's auto-trigger** — predictable and testable
+(there's a routing-eval harness), and reliable no matter how large the library grows. That baseline is
 `skillOverrides`, which **only applies to skills in `.claude/skills/`** — hence the
 installer (path 2) for the full library, and small per-role **plugins** (path 1)
 everywhere else, where staying small is the only way to avoid cropping. The full
