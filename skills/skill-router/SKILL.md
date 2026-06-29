@@ -32,6 +32,13 @@ data decision, implementing, debugging, reviewing, refactoring, or shipping —
 not an optional extra. The skills encode the *how* and *why* of doing each
 activity well, so you don't have to re-derive them.
 
+Routing is **not a once-per-session gate.** Re-route whenever the *kind* of work
+changes — analysis → implementation → writing tests → review → shipping — because
+each phase's skill is loaded only when invoked, and the one you need for the new
+phase almost certainly isn't loaded yet. A session that routed for analysis and
+then writes tests an hour later without re-routing silently drops the testing
+skills' guidance.
+
 Do **not** talk yourself out of it because the task "looks like a one-liner,"
 touches only one file, or seems obvious. Small structural changes (renames,
 config edits, dependency bumps) and anything that matches a specific skill's

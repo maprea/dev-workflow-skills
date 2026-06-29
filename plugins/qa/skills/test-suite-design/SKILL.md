@@ -68,6 +68,8 @@ For each piece of code to test, create a behavior map — not a line-by-line mir
 - What auth/permission checks exist?
 - What database state changes occur?
 
+When mapping behaviors, exclude behaviors that belong to a dependency — map *your* code's use of it (the inputs it passes, how it handles the library's outputs and errors), not the library's internals. "gzip produces these magic bytes" is zlib's behavior; "our codec round-trips a value and falls back gracefully on a legacy plain string" is ours.
+
 Present the behavior map to the user and refine before writing tests.
 
 ### Step 4: Choose the Testing Layer
@@ -131,4 +133,5 @@ Coverage percentage is a floor, not a ceiling. 80% meaningful coverage beats 100
 - **DRY in tests**: Share setup through fixtures/factories, but keep each test readable on its own. A little repetition in tests is better than obscure shared state.
 - **KISS**: Test behavior, not implementation. Don't mirror the code structure 1:1 in tests.
 - **YAGNI**: Don't test trivial code (getters, delegating wrappers). Focus coverage where bugs hide.
+- **Test your code, not your dependencies**: Assert what *your* code does with a library, not what the library does. A round-trip through your own `pack`/`unpack` wrapper is your logic; asserting a compression lib's magic bytes or its compression ratio is re-testing zlib — the vendor's job, already covered by the vendor's tests. Verify third-party *integration* at the integration layer, not by re-testing the library.
 - **Functional Independence**: Each test should set up its own state and clean up after itself.

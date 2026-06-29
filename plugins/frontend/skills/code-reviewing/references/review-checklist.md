@@ -92,6 +92,7 @@ Flag when you see:
 - [ ] Tests are independent (no shared mutable state)
 - [ ] Test names describe the behavior being tested
 - [ ] No logic in tests (no if/else, no loops)
+- [ ] No tests that merely re-verify third-party library behavior (e.g. asserting a compression lib's magic bytes or compression ratio, or that an ORM persists a row) — tests target our own logic and our boundary with the library, not what the vendor's own tests already cover
 - [ ] Mocks/stubs are used appropriately (not over-mocked)
 - [ ] Integration tests exist for cross-boundary interactions
 

@@ -109,7 +109,7 @@ Suggest the appropriate approach based on the task. Default to unit tests unless
 TDD is a design tool, not a coverage tool. Don't TDD:
 - Trivial getters/setters
 - Framework configuration
-- Third-party library wrappers (test at integration level instead)
+- Third-party libraries themselves — test *your code's use* of them at the integration level; don't re-assert what the library's own tests already cover (its compression, its persistence, its parsing)
 - UI layout (visual regression tools are better here)
 
 ## Principles Applied
