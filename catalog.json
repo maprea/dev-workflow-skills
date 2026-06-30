@@ -178,7 +178,7 @@
     },
     {
       "name": "skill-router",
-      "description": "Orchestrator and entry point for the swe-workflow skills library. Invoke FIRST on any non-trivial software task — before exploring or analyzing the codebase, spawning subagents, planning, designing, implementing, debugging, reviewing, refactoring, securing, deploying, or handling incidents — and do so even when you already believe you know how to proceed (do not wait until you feel unsure). Most skills are loaded name-only and do not auto-trigger, so routing through here is the ONLY way they activate; skipping it silently drops their guidance. Reads the skill catalog, matches intent, and invokes the right skill by name. Covers planning, architecture, design, implementation, testing, debugging, review, refactoring, security, deployment, incidents, and PM docs. Shows the Golden Path workflow chains.",
+      "description": "Orchestrator and entry point for the swe-workflow skills library — consult FIRST when starting any non-trivial software task; most skills load name-only and only activate when invoked here. Triggers: starting a feature, planning, an architecture or design decision, implementing, debugging, reviewing, refactoring, testing, security, deployment, an incident, shipping, or unsure which skill fits. Routes intent to the right skill(s) and invokes them by name; shows the Golden Path chains.",
       "path": "skill-router/SKILL.md"
     },
     {
