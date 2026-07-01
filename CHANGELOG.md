@@ -20,6 +20,8 @@ Initial release.
   `uninstall.mjs`, `scripts/resolve.mjs`, `hooks/session-start.mjs`) — identical on
   Linux, macOS, and Windows.
 - Per-role plugin marketplace (`.claude-plugin/marketplace.json`).
+- `swe-workflow-skills` npm package: `npx swe-workflow-skills install [--global|--role R]`
+  (and `uninstall`), no clone required.
 - Eval harness (in-session workflow runner + CI regression gate) and offline
   `scripts/verify.mjs`.
 - Documentation: README, ROLES, INSTALL-MATRIX, SKILLS, AUTHORING, EVALS, RELEASING.

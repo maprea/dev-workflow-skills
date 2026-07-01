@@ -77,6 +77,15 @@ step("roles.json integrity");
 check(validate(data, join(ROOT, "skills")).length === 0, "validate found errors");
 pass("every referenced skill exists; no orphans");
 
+// 1b — version single-source (VERSION drives package.json + the marketplace)
+step("version single-source is in sync");
+const VER = readFileSync(join(ROOT, "VERSION"), "utf-8").trim();
+const pkgVer = readJSON(join(ROOT, "package.json")).version;
+check(pkgVer === VER, `package.json version ${pkgVer} != VERSION ${VER}`);
+const mktVer = readJSON(join(ROOT, ".claude-plugin", "marketplace.json")).version;
+check(mktVer === VER, `marketplace version ${mktVer} != VERSION ${VER}`);
+pass(`VERSION, package.json, and marketplace all agree on ${VER}`);
+
 // 2 — generator + catalog + JSON validity
 step("generator + catalog + JSON validity");
 execFileSync(NODE, [join(ROOT, "scripts", "build-plugins.mjs")], { stdio: "ignore", cwd: ROOT });

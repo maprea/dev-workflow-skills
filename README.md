@@ -43,13 +43,13 @@ web, claude.ai chat, and Cowork):
 /plugin install swe-workflow-pm@swe-workflow
 ```
 
-**Want the whole library with the orchestrator** (CLI):
+**Want the whole library with the orchestrator** (CLI) — no clone needed:
 
 ```bash
-git clone https://github.com/SWEStash/swe-workflow-skills.git
-cd swe-workflow-skills
-node install.mjs --global        # all 44 skills + router + /role + the SessionStart hook
+npx swe-workflow-skills install --global   # all 44 skills + router + /role + the SessionStart hook
 ```
+
+Or from a clone: `node install.mjs --global`.
 
 > **Prerequisite:** Node.js ≥ 18 (already present wherever Claude Code runs).
 
@@ -60,15 +60,17 @@ Two supported paths, chosen by what your environment can run:
 | Path | What you get | Works on |
 |------|--------------|----------|
 | **Per-role plugin** (above) | your role's crop-safe subset, auto-triggering | CLI · Code web · claude.ai chat · Cowork |
-| **`node install.mjs`** | the full library + orchestrator + `/role` + hook | CLI · Cowork |
+| **`npx swe-workflow-skills`** | the full library + orchestrator + `/role` + hook | CLI · Cowork |
 
 ```bash
-node install.mjs                    # all skills -> ./.claude/ (project-local)
-node install.mjs --global           # -> user config dir ($CLAUDE_CONFIG_DIR or ~/.claude)
-node install.mjs --role pm          # a lean hard subset (just the PM skills)
-node install.mjs --no-hook          # skip the SessionStart hook (baseline still applied)
-node uninstall.mjs --dry-run        # preview removal; --global/--dir mirror install
+npx swe-workflow-skills install               # all skills -> ./.claude/ (project-local)
+npx swe-workflow-skills install --global      # -> user config dir ($CLAUDE_CONFIG_DIR or ~/.claude)
+npx swe-workflow-skills install --role pm     # a lean hard subset (just the PM skills)
+npx swe-workflow-skills install --no-hook     # skip the SessionStart hook (baseline still applied)
+npx swe-workflow-skills uninstall --dry-run   # preview removal; --global/--dir mirror install
 ```
+
+From a clone, the same commands are `node install.mjs …` / `node uninstall.mjs …`.
 
 The installer never edits `settings.json` — it prints the SessionStart hook snippet for
 you to merge. Re-running is idempotent. See **[INSTALL-MATRIX.md](docs/INSTALL-MATRIX.md)**
