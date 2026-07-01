@@ -48,6 +48,76 @@ unreliable and uncontrolled.
 `skillOverrides` and the listing **hot-reload** when `settings.local.json`
 changes, so the baseline and role switches apply without a restart.
 
+## Routing flow
+
+```mermaid
+flowchart TD
+    H["SessionStart hook<br/>writes the name-only baseline + router nudge"]
+    U["User intent<br/>(or a new phase of work)"]
+    R{{"skill-router<br/>(pinned, always loaded)"}}
+    C["Reads catalog.json<br/>every skill's full description, no budget cost"]
+    M["Matches intent → one or more skills"]
+    I["Invokes the chosen skill(s) by name"]
+    W["Skill runs its workflow"]
+    P{"Work shifts to<br/>a new phase?"}
+    D["Done"]
+    POOL[("name-only skills<br/>invocable, not auto-triggered")]
+    ROLE["/role &lt;name&gt;"]
+
+    H -. primes the session .-> R
+    U --> R
+    R --> C
+    C --> M
+    M --> I
+    I --> W
+    W --> P
+    P -- "yes — re-route" --> R
+    P -- no --> D
+    POOL --- C
+    ROLE -. "promotes a set back to auto-trigger" .-> POOL
+```
+
+The router is the only decision point: it draws from the full catalog (not the
+budget-limited listing), invokes by name, and is re-entered every time the work
+changes phase. A role just flips part of the name-only pool back to auto-trigger for
+direct one-hop use.
+
+## What routing looks like in a session
+
+The router isn't a one-time gate — Claude re-consults it as the *kind* of work
+changes, so each phase loads only the skill it needs. A single feature might play out
+like this:
+
+```text
+you ▸ "Add OAuth login to the API."
+
+       ┌─ skill-router ──────────────────────────────────────────────┐
+phase  │ matches intent → invokes by name                            │
+───────┼─────────────────────────────────────────────────────────────┤
+plan   │ → feature-planning      scope tasks, acceptance criteria      │
+design │ → architecture-design   ADR: session vs token, where auth lives
+       │ → data-modeling         user/session schema + migration       │
+build  │ → tdd-workflow          red → green → refactor                │
+review │ → security-audit  +  code-reviewing   (fan-out: one prompt,   │
+       │                                        two skills)            │
+ship   │ → deployment-checklist  pre-deploy safety + rollback          │
+       └─────────────────────────────────────────────────────────────┘
+
+# A new phase later in the session re-routes — the testing skill wasn't
+# loaded an hour ago, so the router fetches it now:
+you ▸ "Now add tests for the token-refresh edge cases."
+       → skill-router → test-suite-design
+
+# Working in one hat all session? Promote the set so it auto-triggers:
+you ▸ /role backend
+       backend skills now auto-trigger; everything else stays one route away.
+```
+
+Two things to notice: a single request can **fan out** to several skills
+(`security-audit` *and* `code-reviewing`), and a later phase **re-routes** to a skill
+that wasn't loaded earlier — which is exactly why routing beats one-shot
+auto-triggering at this scale.
+
 ## Two ways to avoid cropping (and where each works)
 
 Cropping has exactly two cures, and which install method you pick comes down to which
@@ -91,25 +161,28 @@ catalog it could read, it would only waste a listing slot).
 A role's working set = its **core** ∪ its own skills. Cores: **universal** =
 `skill-router`, `feature-planning`; **technical** = universal + `git-workflow`,
 `code-reviewing`, `verification-before-completion`, `bug-investigating`,
-`project-documentation`. Inspect with `python3 scripts/resolve.py skills <role>`
-or list roles with `python3 scripts/resolve.py roles`.
+`project-documentation`. Inspect with `node scripts/resolve.mjs skills <role>`
+or list roles with `node scripts/resolve.mjs roles`.
 
 ## Install (CLI — the full dynamic model)
 
-This is the only path that delivers the **whole library** (all 42 skills) without
-cropping, because the name-only baseline (`skillOverrides`) applies only to skills in
-`.claude/skills/` — see [Why plugins can't carry the baseline](#why-plugins-cant-carry-the-baseline).
+This is the only path that delivers the **whole library** without cropping, because
+the name-only baseline (`skillOverrides`) applies only to skills in `.claude/skills/`
+— see [Why plugins can't carry the baseline](#why-plugins-cant-carry-the-baseline).
+
+The installer is **pure Node** — the runtime Claude Code already requires — so these
+commands run unchanged on **Linux, macOS, and Windows** (no bash, Python, or `sed`).
 
 ```bash
-./install.sh                     # all skills + machinery + hook + baseline -> ./.claude/
-./install.sh --global            # ...to the user config dir
-./install.sh --no-hook           # skip the hook (baseline still applied at install)
-./install.sh --role pm           # hard subset: just the PM skills (no orchestrator gating)
-./install.sh --role pm --prune   # ...and drop other library skills from a prior install
+node install.mjs                     # all skills + machinery + hook + baseline -> ./.claude/
+node install.mjs --global            # ...to the user config dir
+node install.mjs --no-hook           # skip the hook (baseline still applied at install)
+node install.mjs --role pm           # hard subset: just the PM skills (no orchestrator gating)
+node install.mjs --role pm --prune   # ...and drop other library skills from a prior install
 ```
 
 The default installs **all** skills plus the machinery (catalog/role markers,
-`resolve.py`, the `/role` command), **applies the name-only baseline** to
+`resolve.mjs`, the `/role` command), **applies the name-only baseline** to
 `settings.local.json` immediately, and installs the SessionStart hook. Because the
 baseline is written at install time and `skillOverrides` persists, the install is
 **crop-safe right away** — even before you wire the hook, and with `--no-hook`. The
@@ -127,17 +200,17 @@ always wins.
 ### Uninstall
 
 ```bash
-./uninstall.sh                   # remove from ./.claude/
-./uninstall.sh --global          # ...from the user config dir
-./uninstall.sh --dry-run         # preview only
+node uninstall.mjs                   # remove from ./.claude/
+node uninstall.mjs --global          # ...from the user config dir
+node uninstall.mjs --dry-run         # preview only
 ```
 
 Removes only what the installer created (this repo's skills, the catalog/role
-markers, `resolve.py`, the hook script, the `/role` command) and prunes the
+markers, `resolve.mjs`, the hook script, the `/role` command) and prunes the
 library's `skillOverrides` from `settings.local.json`. It prompts first (`--yes` to
 skip) and prints the `SessionStart` block to delete from `settings.json` — which it
 never edits. The `.active-role` marker is only written by `--role` (and rewritten by
-`/role`); `/role all|none` and `uninstall.sh` clear it.
+`/role`); `/role all|none` and `uninstall.mjs` clear it.
 
 ### Switch roles at runtime
 

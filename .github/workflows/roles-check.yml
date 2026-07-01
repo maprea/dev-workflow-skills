@@ -1,18 +1,32 @@
 name: roles-check
 
-# Offline integrity gate for role-based, window-aware activation. Runs on PRs
-# that touch the SSOT, the generators, the installer, the hooks, or the
-# generated marketplace. No API key required.
+# Offline integrity gate for role-based, window-aware activation. Runs on PRs and
+# on pushes to main that touch the SSOT, the generators, the installer, the hooks,
+# or the generated marketplace. No API key required. (Pushing to main keeps the
+# status badge current — the badge reflects the latest run on the default branch.)
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "roles.json"
+      - "catalog.json"
+      - "skills/**"
+      - "scripts/**"
+      - "install.mjs"
+      - "uninstall.mjs"
+      - "hooks/**"
+      - "commands/**"
+      - "plugins/**"
+      - ".claude-plugin/**"
   pull_request:
     paths:
       - "roles.json"
       - "catalog.json"
       - "skills/**"
       - "scripts/**"
-      - "install.sh"
-      - "uninstall.sh"
+      - "install.mjs"
+      - "uninstall.mjs"
       - "hooks/**"
       - "commands/**"
       - "plugins/**"
@@ -23,17 +37,30 @@ permissions:
   contents: read
 
 jobs:
-  verify:
+  # Generated-tree drift is a single-platform concern (line endings would make a
+  # cross-OS git diff flaky), so check it once on Linux.
+  drift:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
       - name: Marketplace tree is committed and up to date
         run: node scripts/build-plugins.mjs --check
+
+  # The deployment layer is pure Node now; the matrix proves it installs on Linux,
+  # macOS, and Windows from the one runtime Claude Code already requires.
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
       - name: Integrity + behavior checks
-        run: bash scripts/verify.sh
+        run: node scripts/verify.mjs

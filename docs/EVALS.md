@@ -45,7 +45,7 @@ describes the schema and a repeatable way to run them.
 Replaying through a *fresh* subagent avoids the current session's context
 nudging the result toward compliance.
 
-1. Install the skill (`./install.sh <skill>`).
+1. Install the skill (`node install.mjs <skill>`).
 2. For each entry, dispatch a fresh subagent with the `prompt` and let the skill
    trigger naturally (don't paste the SKILL.md — you're testing triggering too).
 3. Capture the transcript.
@@ -129,7 +129,7 @@ skill only delivers its proven lift if `skill-router` routes to it. In short:
 Both route on **haiku** (`claude-haiku-4-5` — `skill-router`'s shipping model).
 The three layers from the original design:
 
-1. **Plumbing** — covered by `scripts/verify.sh` (offline: the hook writes the
+1. **Plumbing** — covered by `node scripts/verify.mjs` (offline: the hook writes the
    right `skillOverrides`, `/role` promotes/resets, the catalog is complete).
    Kept separate from this model-in-the-loop harness.
 2. **Routing accuracy (layer 2, the core).** Isolate the decision: give the model

@@ -18,7 +18,9 @@ const SKILLS = join(ROOT, "skills");
 const PLUGINS = join(ROOT, "plugins");
 const MARKET_DIR = join(ROOT, ".claude-plugin");
 const CATALOG = join(ROOT, "catalog.json");
-const VERSION = "0.1.0";
+// Single source of truth for the library version (see docs/RELEASING.md). All
+// plugins + the marketplace are versioned in lockstep from this file.
+const VERSION = readFileSync(join(ROOT, "VERSION"), "utf-8").trim();
 
 const roles = JSON.parse(readFileSync(join(ROOT, "roles.json"), "utf-8"));
 

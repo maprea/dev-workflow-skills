@@ -1,5 +1,5 @@
 {
-  "_comment": "Reference snippet. Merge the `hooks` block into your .claude/settings.json (project) or ~/.claude/settings.json (global). Replace HOOK_PATH with the absolute path to session-start.sh printed by `./install.sh --hook`. The hook writes the name-only activation baseline to settings.local.json on each session boundary. See hooks/README.md.",
+  "_comment": "Reference snippet. Merge the `hooks` block into your .claude/settings.json (project) or ~/.claude/settings.json (global). Replace HOOK_PATH with the absolute path to session-start.mjs printed by `node install.mjs`. Invoking via `node` keeps the hook portable across Linux, macOS, and Windows. The hook writes the name-only activation baseline to settings.local.json on each session boundary. See hooks/README.md.",
   "hooks": {
     "SessionStart": [
       {
@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "HOOK_PATH"
+            "command": "node \"HOOK_PATH\""
           }
         ]
       }

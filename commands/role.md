@@ -17,15 +17,15 @@ ROLES="@@ROLES@@"; ACTIVE="@@ACTIVE_ROLE@@"
 export ROLES_JSON="$ROLES"
 if [ -z "$ROLE" ]; then
   echo "Active role: $(cat "$ACTIVE" 2>/dev/null || echo 'baseline (none)')"
-  echo "Available roles:"; python3 "$RESOLVE" roles
+  echo "Available roles:"; node "$RESOLVE" roles
 elif [ "$ROLE" = "all" ] || [ "$ROLE" = "none" ]; then
-  python3 "$RESOLVE" apply "$SETTINGS" "$SKILLS" none && rm -f "$ACTIVE"
+  node "$RESOLVE" apply "$SETTINGS" "$SKILLS" none && rm -f "$ACTIVE"
   echo "Reset to baseline — only the pinned skills auto-trigger now."
-elif python3 "$RESOLVE" label "$ROLE" >/dev/null 2>&1; then
-  python3 "$RESOLVE" apply "$SETTINGS" "$SKILLS" "$ROLE" && printf '%s\n' "$ROLE" > "$ACTIVE"
+elif node "$RESOLVE" label "$ROLE" >/dev/null 2>&1; then
+  node "$RESOLVE" apply "$SETTINGS" "$SKILLS" "$ROLE" && printf '%s\n' "$ROLE" > "$ACTIVE"
   echo "Active role set to '$ROLE' — its skills now auto-trigger."
 else
-  echo "Unknown role '$ROLE'. Available roles:"; python3 "$RESOLVE" roles
+  echo "Unknown role '$ROLE'. Available roles:"; node "$RESOLVE" roles
 fi
 ```
 

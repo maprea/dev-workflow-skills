@@ -22,17 +22,21 @@ overflows that budget and some skills silently stop triggering. Two designs avoi
 | Method | What you get | How skills activate | Reliable at 40+ | Works on |
 |---|---|---|---|---|
 | **Per-role plugin** `swe-workflow-<role>` | your role's skills (5–18) | all auto-trigger; chosen by your intent | ✓ (small set) | CLI · Code web · claude.ai chat · Cowork |
-| **Installer** `install.sh` | all 42 skills + orchestrator + `/role` | name-only baseline; the router invokes the rest by name; hook re-asserts each session | ✓ | CLI · Cowork |
-| `install.sh --role <r>` | one role's skills | all auto-trigger | ✓ (small set) | CLI · Cowork |
-| `install.sh --no-hook` | all 42 skills + orchestrator | baseline applied at install; no automatic re-assert | ✓ | CLI · Cowork |
+| **Installer** `node install.mjs` | all skills + orchestrator + `/role` | name-only baseline; the router invokes the rest by name; hook re-asserts each session | ✓ | CLI · Cowork |
+| `node install.mjs --role <r>` | one role's skills | all auto-trigger | ✓ (small set) | CLI · Cowork |
+| `node install.mjs --no-hook` | all skills + orchestrator | baseline applied at install; no automatic re-assert | ✓ | CLI · Cowork |
 | Manual copy (`cp`) — not recommended | whatever you copy | all auto-trigger | ✗ overflows at 40+ | CLI · Cowork |
 
 "Reliable at 40+" = the skill listing won't overflow and silently drop skills.
 
+"Works on" is about Claude Code **surfaces**, not operating systems. The installer
+itself is **pure Node** (the runtime Claude Code already requires), so it runs the same
+on **Linux, macOS, and Windows** — there are no bash, Python, or `sed` prerequisites.
+
 ## What "works on" means
 
 - **CLI / desktop / IDE** — everything works: plugins, the installer, the session hook,
-  and runtime `/role` switching.
+  and runtime `/role` switching. Same on Linux, macOS, and Windows.
 - **Claude Code on the web** — plugins and skills load, but session hooks don't run, so
   the installer's full-library mode isn't available here. Install a per-role plugin.
 - **claude.ai chat (and Cowork)** — add the plugin marketplace from Customize → Plugins;
@@ -55,7 +59,7 @@ Roles: `backend`, `frontend`, `devops`, `ml`, `security`, `architect`, `em`, `pm
 **You want the whole library with the orchestrator, on the CLI:** run the **installer**.
 
 ```bash
-./install.sh --global        # all skills + orchestrator + /role + the session hook
+node install.mjs --global        # all skills + orchestrator + /role + the session hook
 ```
 
 **Teams:** run the installer into your project's `.claude/` and commit it.
